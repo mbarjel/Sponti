@@ -1,0 +1,56 @@
+{
+	"conversations": [ {
+		"id":"1",
+		"contacts":["1"],
+		"messages":[{
+			"id":"1",
+			"text":"can you do tricks with shisha? like tornado",
+			"date":"2013-09-25 06:12:08 +0000",
+			"contactID":"22"
+		},{
+			"id":"2",
+			"text":"what the hell is tornado?",
+			"date":"2013-09-25 06:12:28 +0000",
+			"contactID":"0"
+        },{
+            "id":"5",
+            "text":"http://www.youtube.com/watch?v=kXbvyixGom8 i wish i can do it",
+            "date":"2013-09-25 06:14:28 +0000",
+            "contactID":"22"
+        },{
+            "id":"6",
+            "text":"haha those guys have a lot of time on their hands bro",
+            "date":"2013-09-25 06:18:01 +0000",
+            "contactID":"0"
+        },{
+            "id":"6",
+            "text":"started from the bottom",
+            "date":"2013-09-26 01:12:28 +0000",
+            "contactID":"22"
+        },{
+            "id":"7",
+            "text":"now were here!",
+            "date":"2013-09-26 06:15:28 +0000",
+            "contactID":"0"
+        },{
+            "id":"8",
+            "text":"YO!!!",
+            "date":"2013-09-23 06:15:28 +0000",
+            "contactID":"22"
+        }]
+	},{
+		"id":"2",
+		"contacts":["2","3"],
+		"messages":[{
+			"id":"3",
+			"text":"test 3",
+			"date":"2013-09-25 06:12:08 +0000",
+			"contactID":"17"
+		},{
+			"id":"4",
+			"text":"test 4",
+			"date":"2013-09-25 06:12:28 +0000",
+			"contactID":"0"
+		}]
+	}]
+}

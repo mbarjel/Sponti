@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3396" systemVersion="12F37" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="SPContact" representedClassName="SPContact" syncable="YES">
+        <attribute name="blocked" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="distance" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="favourite" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="imageName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="conversations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SPConversation" inverseName="contacts" inverseEntity="SPConversation" syncable="YES"/>
+    </entity>
+    <entity name="SPConversation" representedClassName="SPConversation" syncable="YES">
+        <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="contacts" optional="YES" toMany="YES" minCount="1" deletionRule="Nullify" destinationEntity="SPContact" inverseName="conversations" inverseEntity="SPContact" syncable="YES"/>
+        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SPMessage" inverseName="conversation" inverseEntity="SPMessage" syncable="YES"/>
+    </entity>
+    <entity name="SPMessage" representedClassName="SPMessage" syncable="YES">
+        <attribute name="contactID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="conversation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SPConversation" inverseName="messages" inverseEntity="SPConversation" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="SPContact" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="SPConversation" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="SPMessage" positionX="0" positionY="0" width="0" height="0"/>
+    </elements>
+</model>

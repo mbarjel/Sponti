@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>uid</key>
+		<string>0</string>
+		<key>name</key>
+		<string>Jerlene Salerno</string>
+		<key>imageName</key>
+		<string>one</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>1</string>
+		<key>name</key>
+		<string>Veronica Battles</string>
+		<key>imageName</key>
+		<string>2.png</string>
+		<key>distance</key>
+		<integer>4</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>2</string>
+		<key>name</key>
+		<string>Lonnie Mahurin</string>
+		<key>imageName</key>
+		<string>3.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>3</string>
+		<key>name</key>
+		<string>Vincenzo Eggebrecht</string>
+		<key>imageName</key>
+		<string>4.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>4</string>
+		<key>name</key>
+		<string>Kirby Linson</string>
+		<key>imageName</key>
+		<string>5.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>5</string>
+		<key>name</key>
+		<string>Reina Covarrubias</string>
+		<key>imageName</key>
+		<string>6.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>6</string>
+		<key>name</key>
+		<string>Audrey Callaham</string>
+		<key>imageName</key>
+		<string>7.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>7</string>
+		<key>name</key>
+		<string>Yon Alt</string>
+		<key>imageName</key>
+		<string>8.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>8</string>
+		<key>name</key>
+		<string>Junko Granville</string>
+		<key>imageName</key>
+		<string>9.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>9</string>
+		<key>name</key>
+		<string>Christene Brisco</string>
+		<key>imageName</key>
+		<string>10.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>10</string>
+		<key>name</key>
+		<string>Gigi Coulston</string>
+		<key>imageName</key>
+		<string>11.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>11</string>
+		<key>name</key>
+		<string>Sandra Longacre</string>
+		<key>imageName</key>
+		<string>12.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>12</string>
+		<key>name</key>
+		<string>Wilmer Cappello</string>
+		<key>imageName</key>
+		<string>13.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>13</string>
+		<key>name</key>
+		<string>Nam Mcglothlen</string>
+		<key>imageName</key>
+		<string>14.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>14</string>
+		<key>name</key>
+		<string>Alice Orosz</string>
+		<key>imageName</key>
+		<string>15.png</string>
+		<key>distance</key>
+		<integer>2</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>15</string>
+		<key>name</key>
+		<string>Sumiko Stilts</string>
+		<key>imageName</key>
+		<string>16.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>16</string>
+		<key>name</key>
+		<string>Kylie Riner</string>
+		<key>imageName</key>
+		<string>17.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>17</string>
+		<key>name</key>
+		<string>Alvera Garmon</string>
+		<key>imageName</key>
+		<string>18.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>18</string>
+		<key>name</key>
+		<string>Leesa Swatzell</string>
+		<key>imageName</key>
+		<string>19.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>19</string>
+		<key>name</key>
+		<string>Raymon Valtierra</string>
+		<key>imageName</key>
+		<string>20.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>20</string>
+		<key>name</key>
+		<string>Kassandra Brannum</string>
+		<key>imageName</key>
+		<string>21.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>21</string>
+		<key>name</key>
+		<string>Ophelia Halverson</string>
+		<key>imageName</key>
+		<string>22.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>22</string>
+		<key>name</key>
+		<string>Nickolas Wilhoite</string>
+		<key>imageName</key>
+		<string>23.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>23</string>
+		<key>name</key>
+		<string>Sulema Sigman</string>
+		<key>imageName</key>
+		<string>24.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>24</string>
+		<key>name</key>
+		<string>Jeanetta Penix</string>
+		<key>imageName</key>
+		<string>25.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>25</string>
+		<key>name</key>
+		<string>Sharika Yazzie</string>
+		<key>imageName</key>
+		<string>26.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>26</string>
+		<key>name</key>
+		<string>Karey Province</string>
+		<key>imageName</key>
+		<string>27.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>27</string>
+		<key>name</key>
+		<string>Mitzi Hetherington</string>
+		<key>imageName</key>
+		<string>28.png</string>
+		<key>distance</key>
+		<integer>5</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>28</string>
+		<key>name</key>
+		<string>Berenice Kindel</string>
+		<key>imageName</key>
+		<string>29.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>uid</key>
+		<string>29</string>
+		<key>name</key>
+		<string>Shelton Rideaux</string>
+		<key>imageName</key>
+		<string>30.png</string>
+		<key>distance</key>
+		<integer>20</integer>
+	</dict>
+</array>
+</plist>
