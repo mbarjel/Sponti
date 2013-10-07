@@ -167,6 +167,12 @@
 - (void)contactsViewController:(SPContactsViewController *)contactsViewController didInviteContact:(SPContact *)contact {
     [self.chatView.conversation addContactsObject:contact];
     
+    SPMessage* message = [SPMessage MR_createEntity];
+    message.contactID = @"invite";
+    message.text = [NSString stringWithFormat:@"%@ added to conversation",contact.title];
+    message.date = [NSDate date];
+    [self.chatView.conversation addMessagesObject:message];
+    
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         [self.chatView setContact:contact forGroupChat:YES];
         NSLog(@"Add CONTACT TO CONVERSATIONS");

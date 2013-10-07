@@ -11,6 +11,7 @@
 typedef enum {
     SPMessageTypeReceived,
     SPMessageTypeSent,
+    SPMessageTypeInvite
 } SPMessageType;
 
 @interface SPMessageTableViewCell : UITableViewCell

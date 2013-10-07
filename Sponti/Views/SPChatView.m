@@ -108,6 +108,7 @@
     _conversation = [[SPContactsManager sharedManager] getConversationForContact:_contact forGroupChat:groupChat];
     if (_conversation.messages.count) {
         _messages = [SPMessage MR_findByAttribute:@"conversation" withValue:_conversation andOrderBy:@"date" ascending:YES];
+        [self.tableView reloadData];
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:_messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     } else {
         _messages = [NSArray array];
@@ -264,7 +265,16 @@
     SPMessageTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:[SPMessageTableViewCell reuseIdentifier]];
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     SPMessage* message = [_messages objectAtIndex:indexPath.item];
-    SPMessageType type = [message.contactID isEqualToString:@"0"] ? SPMessageTypeSent : SPMessageTypeReceived;
+    
+    SPMessageType type;
+    if ([message.contactID isEqualToString:@"0"]) {
+        type = SPMessageTypeSent;
+    } else if ([message.contactID isEqualToString:@"invite"]) {
+        type = SPMessageTypeInvite;
+    } else {
+        type = SPMessageTypeReceived;
+    }
+    
     [cell setMessageText:message.text withType:type];
 
     return cell;
@@ -274,8 +284,12 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     SPMessage* message = [_messages objectAtIndex:indexPath.item];
-    CGSize textSize = [message.text sizeWithFont:[UIFont systemFontOfSize:12.f] constrainedToSize:CGSizeMake(200, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping];
-    return textSize.height + 20;
+    if ([message.contactID isEqualToString:@"invite"]) {
+        return 20;
+    } else {
+        CGSize textSize = [message.text sizeWithFont:[UIFont systemFontOfSize:12.f] constrainedToSize:CGSizeMake(200, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping];
+        return textSize.height + 20;
+    }
 }
 
 @end
