@@ -79,10 +79,6 @@
         }
     }
     self.bubbleView.frame = bubbleViewFrame;
-    
-    NSLog(@"%@", NSStringFromCGRect(self.bubbleView.frame));
-    NSLog(@"%@",NSStringFromCGRect(self.contentView.frame));
-    NSLog(@"%@",NSStringFromCGRect(self.messageLabel.frame));
 }
 
 @end

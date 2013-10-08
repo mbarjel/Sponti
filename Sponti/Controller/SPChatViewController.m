@@ -88,8 +88,6 @@
     [super viewWillAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-    
-    [self displayOverlay];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -111,37 +109,16 @@
     
 }
 
-- (void)displayOverlay {
-    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"chatOverlay"]) {
-        _chatOverlayImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatOverlay.jpg"]];
-        _chatOverlayImageView.userInteractionEnabled = YES;
-        UITapGestureRecognizer* tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(removeOverlay)];
-        [_chatOverlayImageView addGestureRecognizer:tapGestureRecognizer];
-        _chatOverlayImageView.alpha = 0.75;
-        _chatOverlayImageView.frame = CGRectMake(0, 0, 320, 416);
-        [self.view addSubview:_chatOverlayImageView];
-    }
-}
-
-- (void)removeOverlay {
-    [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"chatOverlay"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    [UIView animateWithDuration:0.25 animations:^{
-        _chatOverlayImageView.alpha = 0.f;
-    } completion:^(BOOL finished) {
-        [_chatOverlayImageView removeFromSuperview];
-        _chatOverlayImageView = nil;
-    }];
-}
-
 #pragma mark - SPChatMenuViewControllerDelegate
 
 - (void)didTapOnBlockInChatMenuViewController:(SPChatMenuViewController *)chatMenuViewController {
     self.contact.blocked = [NSNumber numberWithBool:![self.contact.blocked boolValue]];
+    [self.chatView openMenu:NO];
 }
 
 - (void)didTapOnFavouriteInChatMenuViewController:(SPChatMenuViewController *)chatMenuViewController {
     self.contact.favourite = [NSNumber numberWithBool:![self.contact.favourite boolValue]];
+    [self.chatView openMenu:NO];
 }
 
 - (void)didTapOnInviteInChatMenuViewController:(SPChatMenuViewController *)chatMenuViewController {

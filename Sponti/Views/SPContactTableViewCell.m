@@ -68,7 +68,6 @@
 - (void)setContact:(SPContact *)contact {
     _contact = contact;
     UIImageView* imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:contact.imageName]];
-    NSLog(@"%@",contact.imageName);
     imageView.frame = CGRectMake(0, 0, 60, 60);
     [self.contentView addSubview:imageView];
     self.nameLabel.text = contact.title;

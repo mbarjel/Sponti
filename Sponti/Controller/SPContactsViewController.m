@@ -88,9 +88,6 @@
 }
 
 - (void)filterOutContacts:(NSArray *)contacts {
-    for (SPContact* contact in contacts) {
-        NSLog(@"%@",contact.title);
-    }
     _contactsToRemove = contacts;
 }
 
@@ -118,8 +115,12 @@
     if (self.type == SPContactsTypeInvite) {
         [self.delegate contactsViewController:self didInviteContact:contact];
     } else {
-        SPChatViewController* chatViewController = [[SPChatViewController alloc] initWithContact:contact];
-        [(SPTabViewController *)self.tabBarController pushViewController:chatViewController animated:YES];
+        if (![contact.blocked boolValue]) {
+            SPChatViewController* chatViewController = [[SPChatViewController alloc] initWithContact:contact];
+            [(SPTabViewController *)self.tabBarController pushViewController:chatViewController animated:YES];
+        } else {
+            [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Cannot begin conversation with blocked user" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+        }
     }
 }
 
