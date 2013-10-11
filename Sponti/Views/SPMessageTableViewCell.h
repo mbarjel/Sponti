@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SPMessage.h"
 
 typedef enum {
     SPMessageTypeReceived,
@@ -18,6 +19,6 @@ typedef enum {
 
 + (NSString *)reuseIdentifier;
 
-- (void)setMessageText:(NSString *)messageText withType:(SPMessageType)type;
+- (void)setMessage:(SPMessage *)message withType:(SPMessageType)type forGroupChat:(BOOL)groupChat;
 
 @end

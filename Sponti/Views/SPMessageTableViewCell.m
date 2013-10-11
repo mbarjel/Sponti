@@ -7,11 +7,13 @@
 //
 
 #import "SPMessageTableViewCell.h"
+#import "SPContact.h"
 
 @interface SPMessageTableViewCell ()
 
 @property (nonatomic, strong) UIView* bubbleView;
 @property (nonatomic, strong) UILabel* messageLabel;
+@property (nonatomic, strong) UILabel* fromLabel;
 
 @end
 
@@ -37,11 +39,17 @@
         self.messageLabel.numberOfLines = CGFLOAT_MAX;
         self.messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
         [self.bubbleView addSubview:self.messageLabel];
+        
+        self.fromLabel = [[UILabel alloc] init];
+        self.fromLabel.backgroundColor = [UIColor clearColor];
+        self.fromLabel.font = [UIFont boldSystemFontOfSize:10.f];
+        self.fromLabel.textColor = [UIColor grayColor];
+        [self.bubbleView addSubview:self.fromLabel];
     }
     return self;
 }
 
-- (void)setMessageText:(NSString *)messageText withType:(SPMessageType)type {
+- (void)setMessage:(SPMessage *)message withType:(SPMessageType)type forGroupChat:(BOOL)groupChat {
     
     CGFloat textSizeWidth;
     CGRect bubbleViewFrame = self.bubbleView.frame;
@@ -49,7 +57,7 @@
     if (type == SPMessageTypeInvite) {
         textSizeWidth = 310;
         self.messageLabel.frame = CGRectMake(5, 5, 310, 10);
-        self.messageLabel.text = messageText;
+        self.messageLabel.text = message.text;
         self.messageLabel.textAlignment = NSTextAlignmentCenter;
         
         bubbleViewFrame.origin.x = 5;
@@ -63,12 +71,12 @@
         self.bubbleView.frame = CGRectMake(5, 2, 200, 100 - 4);
         
         textSizeWidth = 200;
-        CGSize textSize = [messageText sizeWithFont:self.messageLabel.font constrainedToSize:CGSizeMake(textSizeWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping];
+        CGSize textSize = [message.text sizeWithFont:self.messageLabel.font constrainedToSize:CGSizeMake(textSizeWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping];
         
         self.messageLabel.frame = CGRectMake(5, 5, textSize.width, textSize.height);
-        self.messageLabel.text = messageText;
+        self.messageLabel.text = message.text;
         
-        bubbleViewFrame.size = CGSizeMake(textSize.width + 10, textSize.height + 10);
+        bubbleViewFrame.size = CGSizeMake(textSize.width + 10, textSize.height + (groupChat ? 24 : 10));
         
         if (type == SPMessageTypeSent) {
             bubbleViewFrame.origin.x = 320 - bubbleViewFrame.size.width - 4;
@@ -78,7 +86,35 @@
             self.bubbleView.backgroundColor = [UIColor colorWithWhite:220.f/255.f alpha:1.f];
         }
     }
+    
     self.bubbleView.frame = bubbleViewFrame;
+    
+    if (type != SPMessageTypeInvite && groupChat && ![message.contactID isEqualToString:@"0"]) {
+        SPContact* contact = [SPContact MR_findFirstByAttribute:@"uid" withValue:message.contactID];
+        self.fromLabel.text = [NSString stringWithFormat:@"Message from %@",contact.title];
+        
+        textSizeWidth = 200;
+        CGSize contactNameSize = [self.fromLabel.text sizeWithFont:self.messageLabel.font constrainedToSize:CGSizeMake(textSizeWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping];
+        if (contactNameSize.width > self.messageLabel.frame.size.width) {
+            bubbleViewFrame.size = CGSizeMake(contactNameSize.width, contactNameSize.height + 30);
+            
+            if (type == SPMessageTypeSent) {
+                bubbleViewFrame.origin.x = 320 - bubbleViewFrame.size.width - 4;
+            }
+            
+            self.bubbleView.frame = bubbleViewFrame;
+        }
+        
+        self.fromLabel.frame = CGRectMake(5, self.bubbleView.frame.size.height - 20, self.bubbleView.frame.size.width, 20);
+    }
+    
+    
+}
+
+- (void)prepareForReuse {
+    self.bubbleView.backgroundColor = [UIColor colorWithWhite:170.f/255.f alpha:1.f];
+    self.messageLabel.text = @"";
+    self.fromLabel.text = @"";
 }
 
 @end

@@ -29,6 +29,8 @@
 
 @property (nonatomic, strong) SPContact* contact;
 
+@property (nonatomic, assign) BOOL groupChat;
+
 @end
 
 @implementation SPChatView
@@ -104,7 +106,7 @@
 
 - (void)setContact:(SPContact *)contact forGroupChat:(BOOL)groupChat {
     _contact = contact;
-    
+    _groupChat = groupChat;
     _conversation = [[SPContactsManager sharedManager] getConversationForContact:_contact forGroupChat:groupChat];
     if (_conversation.messages.count) {
         _messages = [SPMessage MR_findByAttribute:@"conversation" withValue:_conversation andOrderBy:@"date" ascending:YES];
@@ -275,7 +277,7 @@
         type = SPMessageTypeReceived;
     }
     
-    [cell setMessageText:message.text withType:type];
+    [cell setMessage:message withType:type forGroupChat:self.groupChat];
 
     return cell;
 }
@@ -288,7 +290,7 @@
         return 20;
     } else {
         CGSize textSize = [message.text sizeWithFont:[UIFont systemFontOfSize:12.f] constrainedToSize:CGSizeMake(200, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping];
-        return textSize.height + 20;
+        return textSize.height + (self.groupChat ? 34 : 20);
     }
 }
 
