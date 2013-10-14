@@ -17,7 +17,7 @@
 #import "SPConversation.h"
 #import "SPMessage.h"
 
-@interface SPChatViewController () <SPChatMenuViewControllerDelegate, SPContactsViewControllerDelegate>
+@interface SPChatViewController () <SPChatMenuViewControllerDelegate, SPContactsViewControllerDelegate, SPChatViewDelagate>
 
 @property (nonatomic, strong) SPContact* contact;
 @property (nonatomic, strong) SPConversation* conversation;
@@ -47,8 +47,6 @@
         self.menuViewController.delegate = self;
         [self addChildViewController:self.menuViewController];
         [self.menuViewController didMoveToParentViewController:self];
-        
-        self.menuIsOpen = NO;
     }
     return self;
 }
@@ -69,14 +67,13 @@
         self.menuViewController.delegate = self;
         [self addChildViewController:self.menuViewController];
         [self.menuViewController didMoveToParentViewController:self];
-        
-        self.menuIsOpen = NO;
     }
     return self;
 }
 
 - (void)loadView {
     self.chatView = [[SPChatView alloc] init];
+    self.chatView.delegate = self;
     [self.chatView setContact:self.contact forGroupChat:self.groupChat];
     
     [self.chatView setMenuView:self.menuViewController.view];
@@ -88,6 +85,7 @@
     [super viewWillAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    self.menuIsOpen = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -113,12 +111,12 @@
 
 - (void)didTapOnBlockInChatMenuViewController:(SPChatMenuViewController *)chatMenuViewController {
     self.contact.blocked = [NSNumber numberWithBool:![self.contact.blocked boolValue]];
-    [self.chatView openMenu:NO];
+    [self didTapOnMenuBarButtonItem];
 }
 
 - (void)didTapOnFavouriteInChatMenuViewController:(SPChatMenuViewController *)chatMenuViewController {
     self.contact.favourite = [NSNumber numberWithBool:![self.contact.favourite boolValue]];
-    [self.chatView openMenu:NO];
+    [self didTapOnMenuBarButtonItem];
 }
 
 - (void)didTapOnInviteInChatMenuViewController:(SPChatMenuViewController *)chatMenuViewController {
@@ -158,6 +156,12 @@
     }];
     
     [self.navigationController popViewControllerAnimated:YES];
+    [self didTapOnMenuBarButtonItem];
+}
+
+#pragma mark - SPChatViewDelegate
+
+- (void)didCloseMenuInChatView:(SPChatView *)chatView {
     [self didTapOnMenuBarButtonItem];
 }
 

@@ -31,6 +31,8 @@
 
 @property (nonatomic, assign) BOOL groupChat;
 
+@property(nonatomic, strong) UITapGestureRecognizer* tapGestureRecognizer;
+
 @end
 
 @implementation SPChatView
@@ -160,12 +162,24 @@
     
     if (openMenu) {
         chatContainerViewFrame.origin.x = -220.f;
+        
+        if (!self.tapGestureRecognizer) {
+            self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
+        }
+        [self addGestureRecognizer:self.tapGestureRecognizer];
     } else {
         chatContainerViewFrame.origin.x = 0;
+        [self removeGestureRecognizer:self.tapGestureRecognizer];
     }
     [UIView animateWithDuration:0.25 animations:^{
         self.chatContainerView.frame = chatContainerViewFrame;
     }];
+    
+}
+
+- (void)hideKeyboard {
+    [self.textView resignFirstResponder];
+    [self.delegate didCloseMenuInChatView:self];
 }
 
 #pragma mark - NSNotification
@@ -188,6 +202,11 @@
     if (_messages.count) {
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:_messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     }
+    
+    if (!self.tapGestureRecognizer) {
+        self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
+    }
+    [self addGestureRecognizer:self.tapGestureRecognizer];
 }
 
 - (void)keyboardWillHide:(NSNotification *)sender {
@@ -195,6 +214,7 @@
         self.tableView.frame = CGRectMake(0, 41, 320, 346);
         self.formView.frame = CGRectMake(0, self.frame.size.height - 30, self.frame.size.width, 30);
     }];
+    [self removeGestureRecognizer:self.tapGestureRecognizer];
 }
 
 #pragma mark - UITextViewDelegate
@@ -290,7 +310,13 @@
         return 20;
     } else {
         CGSize textSize = [message.text sizeWithFont:[UIFont systemFontOfSize:12.f] constrainedToSize:CGSizeMake(200, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping];
-        return textSize.height + (self.groupChat ? 34 : 20);
+        CGFloat height = textSize.height;
+        if (self.groupChat && ![message.contactID isEqualToString:@"0"]) {
+            height += 34;
+        } else {
+            height += 20;
+        }
+        return height;
     }
 }
 

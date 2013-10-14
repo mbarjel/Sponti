@@ -76,7 +76,7 @@
         self.messageLabel.frame = CGRectMake(5, 5, textSize.width, textSize.height);
         self.messageLabel.text = message.text;
         
-        bubbleViewFrame.size = CGSizeMake(textSize.width + 10, textSize.height + (groupChat ? 24 : 10));
+        bubbleViewFrame.size = CGSizeMake(textSize.width + 10, textSize.height + ((groupChat && ![message.contactID isEqualToString:@"0"]) ? 24 : 10));
         
         if (type == SPMessageTypeSent) {
             bubbleViewFrame.origin.x = 320 - bubbleViewFrame.size.width - 4;

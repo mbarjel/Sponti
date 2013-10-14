@@ -9,9 +9,19 @@
 #import <UIKit/UIKit.h>
 #import "SPContact.h"
 
+
+@class SPChatView;
+
+@protocol SPChatViewDelagate <NSObject>
+
+- (void)didCloseMenuInChatView:(SPChatView *)chatView;
+
+@end
+
 @interface SPChatView : UIView
 
 @property (nonatomic, strong) SPConversation* conversation;
+@property (nonatomic, assign) id<SPChatViewDelagate> delegate;
 
 - (void)keyboardWillShow:(NSNotification *)sender;
 - (void)keyboardWillHide:(NSNotification *)sender;

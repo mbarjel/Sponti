@@ -23,6 +23,8 @@
 
 @property (nonatomic, strong) UIImageView* mapOverlayImageView;
 
+@property (nonatomic, strong) MKPointAnnotation* contactAnnotationView;
+
 @end
 
 @implementation SPMapViewController
@@ -72,8 +74,10 @@
     } else {
         if (self.visible) {
             [[[UIAlertView alloc] initWithTitle:@"Hidden" message:@"You are now hidden on the map" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [self performSelector:@selector(removeAnnotation) withObject:nil afterDelay:1.5];
         } else {
             [[[UIAlertView alloc] initWithTitle:@"Visible" message:@"You are now visible on the map" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [self performSelector:@selector(addNewAnnotation) withObject:nil afterDelay:3];
         }
         self.visible = !self.visible;
         
@@ -93,19 +97,23 @@
     [annotation setTitle:@"maleicon.jpg"];
     [annotation setCoordinate:zoomLocation];
     [self.mapView addAnnotation:annotation];
-    
-    [self performSelector:@selector(addNewAnnotation) withObject:nil afterDelay:4];
+}
+
+- (void)removeAnnotation {
+    [[[UIAlertView alloc] initWithTitle:self.contact.title message:[NSString stringWithFormat:@"%@ is now hidden on the map",self.contact.title] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    [self.mapView removeAnnotation:self.contactAnnotationView];
 }
 
 - (void)addNewAnnotation {
-    MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
-    [annotation setTitle:self.contact.imageName];
+    [[[UIAlertView alloc] initWithTitle:self.contact.title message:[NSString stringWithFormat:@"%@ is now visible on the map",self.contact.title] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    self.contactAnnotationView = [[MKPointAnnotation alloc] init];
+    [self.contactAnnotationView setTitle:self.contact.imageName];
     CLLocationCoordinate2D zoomLocation;
     zoomLocation.latitude = -33.81891327051621;
     zoomLocation.longitude = 151.18341386318207;
     
-    [annotation setCoordinate:zoomLocation];
-    [self.mapView addAnnotation:annotation];
+    [self.contactAnnotationView setCoordinate:zoomLocation];
+    [self.mapView addAnnotation:self.contactAnnotationView];
 }
 
 - (void)displayOverlay {

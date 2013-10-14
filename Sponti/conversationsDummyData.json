@@ -40,17 +40,67 @@
         }]
 	},{
 		"id":"2",
-		"contacts":["2","3"],
+		"contacts":["2","3","4"],
 		"messages":[{
 			"id":"3",
-			"text":"test 3",
+			"text":"Hey guys!!!!",
 			"date":"2013-09-25 06:12:08 +0000",
-			"contactID":"17"
+			"contactID":"2"
 		},{
 			"id":"4",
-			"text":"test 4",
+			"text":"Hello Lonnie",
 			"date":"2013-09-25 06:12:28 +0000",
-			"contactID":"0"
-		}]
+			"contactID":"3"
+        }, {
+            "id":"5",
+            "text":"Looks like you guys are around the corner from me. Wanna meet for lunch?",
+            "date":"2013-09-25 06:13:14 +0000",
+            "contactID":"2"
+                    }, {
+            "id":"6",
+            "text":"Whats up peepz!! Sounds great. I am free at 12. Where we gonna meet?",
+            "date":"2013-09-25 06:13:15 +0000",
+            "contactID":"0"
+                    }, {
+                    "id":"7",
+                    "text":"Jump on maps, i will show you this awesome place",
+                    "date":"2013-09-25 06:13:24 +0000",
+                    "contactID":"2"
+                    }, {
+                    "id":"8",
+                    "text":"Looks good. See you there at 12.",
+                    "date":"2013-09-25 06:13:34 +0000",
+                    "contactID":"3"
+                    }, {
+                    "id":"9",
+                    "text":"I dont like japanese food. But i will make an exception for you hahaha see u in 30 min :-)",
+                    "date":"2013-09-25 06:13:36 +0000",
+                    "contactID":"0"
+                    }, {
+                    "id":"10",
+                    "text":"Lets see if Kirby is free. Tell her to join.",
+                    "date":"2013-09-25 06:13:46 +0000",
+                    "contactID":"3"
+                    },{
+                    "id":"14",
+                    "text":"Kirby Linson added to conversation",
+                    "date":"2013-09-25 06:13:47 +0000",
+                    "contactID":"invite"
+                    },{
+                    "id":"11",
+                    "text":"Good to hear from you guys. Thanks for the invite",
+                    "date":"2013-09-25 06:13:48 +0000",
+                    "contactID":"4"
+                    },{
+                    "id":"12",
+                    "text":"Wish I could make it but I have a meeting at 12 :( Raincheque?",
+                    "date":"2013-09-25 06:13:50 +0000",
+                    "contactID":"4"
+                    }, {
+                    "id":"13",
+                    "text":"We will forgive you this time Kirbzz lol!! All good. Maybe next time.",
+                    "date":"2013-09-25 06:13:50 +0000",
+                    "contactID":"0"
+                    }]
 	}]
 }
