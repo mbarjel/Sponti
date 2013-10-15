@@ -76,6 +76,8 @@
     self.chatView.delegate = self;
     [self.chatView setContact:self.contact forGroupChat:self.groupChat];
     
+    self.chatView.blockedView.hidden = (self.groupChat || ![self.contact.blocked boolValue]);
+    
     [self.chatView setMenuView:self.menuViewController.view];
     
     self.view = self.chatView;
@@ -111,18 +113,34 @@
 
 - (void)didTapOnBlockInChatMenuViewController:(SPChatMenuViewController *)chatMenuViewController {
     self.contact.blocked = [NSNumber numberWithBool:![self.contact.blocked boolValue]];
+    self.chatView.blockedView.hidden = ![self.contact.blocked boolValue];
     [self didTapOnMenuBarButtonItem];
 }
 
 - (void)didTapOnFavouriteInChatMenuViewController:(SPChatMenuViewController *)chatMenuViewController {
     self.contact.favourite = [NSNumber numberWithBool:![self.contact.favourite boolValue]];
     [self didTapOnMenuBarButtonItem];
+    
+    SPMessage* message = [SPMessage MR_createEntity];
+    message.contactID = @"invite";
+    message.text = [NSString stringWithFormat:@"%@ %@ to favourites",self.contact.title,[self.contact.favourite boolValue] ? @"added" : @"removed"];
+    message.date = [NSDate date];
+    [self.chatView.conversation addMessagesObject:message];
+    
+    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        [self.chatView setContact:self.contact forGroupChat:self.groupChat];
+        NSLog(@"Add CONTACT TO CONVERSATIONS");
+        NSLog(@"SUCCESS: %@", success ? @"YES" : @"NO");
+        NSLog(@"ERROR: %@",error.debugDescription);
+    }];
+
 }
 
 - (void)didTapOnInviteInChatMenuViewController:(SPChatMenuViewController *)chatMenuViewController {
     SPContactsViewController* contactsViewController = [[SPContactsViewController alloc] initWithType:SPContactsTypeInvite];
     contactsViewController.delegate = self;
     [contactsViewController filterOutContacts:[self.chatView.conversation.contacts allObjects]];
+    [contactsViewController setHideButtons:YES];
     [self.navigationController pushViewController:contactsViewController animated:YES];
 }
 
@@ -161,7 +179,7 @@
 
 #pragma mark - SPChatViewDelegate
 
-- (void)didCloseMenuInChatView:(SPChatView *)chatView {
+- (void)chatView:(SPChatView *)chatView didOpenMenu:(BOOL)openMenu {
     [self didTapOnMenuBarButtonItem];
 }
 

@@ -13,6 +13,7 @@
 @interface SPContactTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) SPContact* contact;
+@property (nonatomic, assign) BOOL hideButtons;
 @property (nonatomic, strong) SPConversation* conversation;
 
 + (NSString *)reuseIdentifier;

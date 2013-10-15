@@ -46,6 +46,7 @@
             make.right.equalTo(self.view.right);
             make.bottom.equalTo(self.view.bottom);
         }];
+        self.hideButtons = NO;
     }
     return self;
 }
@@ -91,6 +92,10 @@
     _contactsToRemove = contacts;
 }
 
+- (void)setHideButtons:(BOOL)hideButtons {
+    _hideButtons = hideButtons;
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -101,6 +106,7 @@
     SPContactTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:[SPContactTableViewCell reuseIdentifier]];
     SPContact* contact = [self.filteredContacts objectAtIndex:indexPath.item];
     [cell setContact:contact];
+    [cell setHideButtons:_hideButtons];
     return cell;
 }
 

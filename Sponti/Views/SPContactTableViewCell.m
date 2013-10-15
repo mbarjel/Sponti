@@ -41,24 +41,26 @@
         
         self.blockButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.blockButton addTarget:self action:@selector(didTapButton:) forControlEvents:UIControlEventTouchUpInside];
+        [self.blockButton setImageEdgeInsets:UIEdgeInsetsMake(15, 5, 15, 5)];
         [self.contentView addSubview:self.blockButton];
         
         [self.blockButton makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.contentView.centerY);
             make.left.equalTo(self.contentView.right).with.offset(-80);
-            make.height.equalTo(@30);
-            make.width.equalTo(@28);
+            make.height.equalTo(self.contentView.height);
+            make.width.equalTo(@40);
         }];
         
         self.favouriteButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.favouriteButton addTarget:self action:@selector(didTapButton:) forControlEvents:UIControlEventTouchUpInside];
+        [self.favouriteButton setImageEdgeInsets:UIEdgeInsetsMake(15, 5, 15, 5)];
         [self.contentView addSubview:self.favouriteButton];
         
         [self.favouriteButton makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.centerY);
-            make.left.equalTo(self.blockButton.right).with.offset(10);
-            make.height.equalTo(@30);
-            make.width.equalTo(@28);
+            make.left.equalTo(self.blockButton.right);
+            make.height.equalTo(self.contentView.height);
+            make.width.equalTo(@40);
         }];
         _imageViews = [NSArray array];
     }
@@ -99,6 +101,12 @@
     } else {
         self.nameLabel.text = @"";
     }
+}
+
+- (void)setHideButtons:(BOOL)hideButtons {
+    _hideButtons = hideButtons;
+    self.favouriteButton.hidden = _hideButtons;
+    self.blockButton.hidden = _hideButtons;
 }
 
 - (void)updateForBlocked:(BOOL)blocked {

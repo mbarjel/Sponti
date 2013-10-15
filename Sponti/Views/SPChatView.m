@@ -31,7 +31,10 @@
 
 @property (nonatomic, assign) BOOL groupChat;
 
-@property(nonatomic, strong) UITapGestureRecognizer* tapGestureRecognizer;
+@property (nonatomic, strong) UITapGestureRecognizer* tapGestureRecognizer;
+@property (nonatomic, strong) UIPanGestureRecognizer* panGestureRecognizer;
+
+@property (nonatomic, strong) UILabel* blockedLabel;
 
 @end
 
@@ -102,6 +105,31 @@
         [self.sendButton setTitle:@"Send" forState:UIControlStateNormal];
         [self.sendButton addTarget:self action:@selector(didTapOnSendButton:) forControlEvents:UIControlEventTouchUpInside];
         [self.formView addSubview:self.sendButton];
+        
+        self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didPanView:)];
+        [self.chatContainerView addGestureRecognizer:self.panGestureRecognizer];
+        
+        self.blockedView = [[UIView alloc] init];
+        self.blockedView.backgroundColor = [UIColor blackColor];
+        self.blockedView.alpha = 0.8;
+        [self.chatContainerView addSubview:self.blockedView];
+        [self.blockedView makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.chatContainerView);
+        }];
+        
+        self.blockedLabel = [[UILabel alloc] init];
+        self.blockedLabel.backgroundColor = [UIColor clearColor];
+        self.blockedLabel.font = [UIFont boldSystemFontOfSize:20.f];
+        self.blockedLabel.textColor = [UIColor whiteColor];
+        self.blockedLabel.text = @"This user is blocked";
+        self.blockedLabel.textAlignment = NSTextAlignmentCenter;
+        [self.blockedView addSubview:self.blockedLabel];
+        [self.blockedLabel makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.equalTo(self.blockedView.centerX);
+            make.centerY.equalTo(self.blockedView.centerY).with.offset(-10);
+            make.height.equalTo(@100);
+            make.width.equalTo(@200);
+        }];
     }
     return self;
 }
@@ -166,20 +194,56 @@
         if (!self.tapGestureRecognizer) {
             self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
         }
-        [self addGestureRecognizer:self.tapGestureRecognizer];
+        [self.chatContainerView addGestureRecognizer:self.tapGestureRecognizer];
     } else {
         chatContainerViewFrame.origin.x = 0;
-        [self removeGestureRecognizer:self.tapGestureRecognizer];
+        [self.chatContainerView removeGestureRecognizer:self.tapGestureRecognizer];
     }
     [UIView animateWithDuration:0.25 animations:^{
         self.chatContainerView.frame = chatContainerViewFrame;
     }];
-    
 }
 
 - (void)hideKeyboard {
     [self.textView resignFirstResponder];
-    [self.delegate didCloseMenuInChatView:self];
+    [self.delegate chatView:self didOpenMenu:NO];
+}
+
+- (void)didPanView:(UIPanGestureRecognizer *)sender {
+    CGFloat openValue = -220;
+    CGFloat closedValue = 0;
+    
+    CGRect chatContainerViewFrame = self.chatContainerView.frame;
+    
+    if (sender.state == UIGestureRecognizerStateChanged) {
+        CGPoint translation = [sender translationInView:self];
+        
+        NSLog(@"%f",translation.x);
+        
+        CGFloat newValue = chatContainerViewFrame.origin.x + translation.x;
+        
+        if ((openValue < newValue) && (newValue < closedValue)) {
+            NSLog(@"in if with value %f",newValue);
+            chatContainerViewFrame.origin.x = newValue;
+        } else if (newValue < openValue) {
+            NSLog(@"in first else if with value %f",newValue);
+            chatContainerViewFrame.origin.x = openValue;
+        } else if (newValue > closedValue) {
+            NSLog(@"in second else if with value %f",newValue);
+            chatContainerViewFrame.origin.x = closedValue;
+        }
+        self.chatContainerView.frame = chatContainerViewFrame;
+    }
+    
+    if (sender.state == UIGestureRecognizerStateEnded) {
+        if (chatContainerViewFrame.origin.x < -110) {
+            [self.delegate chatView:self didOpenMenu:NO];
+        } else {
+            [self.delegate chatView:self didOpenMenu:YES];
+        }
+    }
+    
+    [sender setTranslation:CGPointZero inView:self];
 }
 
 #pragma mark - NSNotification
@@ -206,7 +270,7 @@
     if (!self.tapGestureRecognizer) {
         self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
     }
-    [self addGestureRecognizer:self.tapGestureRecognizer];
+    [self.chatContainerView addGestureRecognizer:self.tapGestureRecognizer];
 }
 
 - (void)keyboardWillHide:(NSNotification *)sender {
@@ -214,7 +278,7 @@
         self.tableView.frame = CGRectMake(0, 41, 320, 346);
         self.formView.frame = CGRectMake(0, self.frame.size.height - 30, self.frame.size.width, 30);
     }];
-    [self removeGestureRecognizer:self.tapGestureRecognizer];
+    [self.chatContainerView removeGestureRecognizer:self.tapGestureRecognizer];
 }
 
 #pragma mark - UITextViewDelegate

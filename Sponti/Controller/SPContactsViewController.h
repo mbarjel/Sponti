@@ -21,6 +21,8 @@
 
 @interface SPContactsViewController : UIViewController
 
+@property (nonatomic, assign) BOOL hideButtons;
+
 @property (nonatomic, weak) id<SPContactsViewControllerDelegate> delegate;
 
 - (id)initWithType:(SPContactsType)type;

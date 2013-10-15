@@ -14,13 +14,14 @@
 
 @protocol SPChatViewDelagate <NSObject>
 
-- (void)didCloseMenuInChatView:(SPChatView *)chatView;
+- (void)chatView:(SPChatView *)chatView didOpenMenu:(BOOL)openMenu;
 
 @end
 
 @interface SPChatView : UIView
 
 @property (nonatomic, strong) SPConversation* conversation;
+@property (nonatomic, strong) UIView* blockedView;
 @property (nonatomic, assign) id<SPChatViewDelagate> delegate;
 
 - (void)keyboardWillShow:(NSNotification *)sender;
