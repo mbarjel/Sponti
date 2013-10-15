@@ -20,6 +20,7 @@
 
 @interface SPChatView : UIView
 
+@property (nonatomic, strong) UIView* chatContainerView;
 @property (nonatomic, strong) SPConversation* conversation;
 @property (nonatomic, strong) UIView* blockedView;
 @property (nonatomic, assign) id<SPChatViewDelagate> delegate;

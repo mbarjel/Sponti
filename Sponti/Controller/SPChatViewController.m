@@ -96,8 +96,14 @@
 }
 
 - (void)didTapOnMenuBarButtonItem {
-    [self.chatView openMenu:!self.menuIsOpen];
-    self.menuIsOpen = !self.menuIsOpen;
+    CGFloat originX = self.chatView.chatContainerView.frame.origin.x;
+    NSLog(@"%f",originX);
+    if ((originX > -100.f && originX != 0) || originX == -220.f) {
+        self.menuIsOpen = NO;
+    } else {
+        self.menuIsOpen = YES;
+    }
+    [self.chatView openMenu:self.menuIsOpen];
 }
 
 - (void)keyboardWillShow:(NSNotification *)sender {
@@ -133,7 +139,6 @@
         NSLog(@"SUCCESS: %@", success ? @"YES" : @"NO");
         NSLog(@"ERROR: %@",error.debugDescription);
     }];
-
 }
 
 - (void)didTapOnInviteInChatMenuViewController:(SPChatMenuViewController *)chatMenuViewController {

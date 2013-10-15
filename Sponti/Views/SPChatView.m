@@ -16,7 +16,6 @@
 
 @property (nonatomic, strong) NSArray* messages;
 
-@property (nonatomic, strong) UIView* chatContainerView;
 @property (nonatomic, strong) UIScrollView* contactsContainerView;
 @property (nonatomic, strong) UIView* menuContainerView;
 
@@ -206,7 +205,9 @@
 
 - (void)hideKeyboard {
     [self.textView resignFirstResponder];
-    [self.delegate chatView:self didOpenMenu:NO];
+    if (self.chatContainerView.frame.origin.x != 0) {
+        [self.delegate chatView:self didOpenMenu:NO];
+    }
 }
 
 - (void)didPanView:(UIPanGestureRecognizer *)sender {
