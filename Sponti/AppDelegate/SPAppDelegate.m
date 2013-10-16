@@ -16,6 +16,11 @@
     
     [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:@"Sponti.sqlite"];
     
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"mapOverlay"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"tabBarOverlay"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userExists"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
     SPSplashViewController* viewController = [[SPSplashViewController alloc] init];
     UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
     navigationController.navigationBarHidden = YES;
