@@ -13,6 +13,9 @@
 #import "SPAboutViewController.h"
 #import "SPFeedbackViewController.h"
 #import "SPLogoutViewController.h"
+#import "SPInviteFacebookFriendsViewController.h"
+#import "SPAllContactsViewController.h"
+#import "SPNotificationsViewController.h"
 
 @interface SPSettingsViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -50,23 +53,32 @@
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 4;
+    return 7;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"TableViewCellReuseIdentifer"];
-    cell.accessoryView = nil;
     cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     if (indexPath.item == 0) {
         cell.textLabel.text = @"About Us";
     } else if (indexPath.item == 1) {
-        cell.textLabel.text = @"Contact Us";
+        cell.textLabel.text = @"Invite Facebook Friends";
     } else if (indexPath.item == 2) {
-        cell.textLabel.text = @"Log Out Timer";
-    } else {
+        cell.textLabel.text = @"My Sponti Friends";
+    } else if (indexPath.item == 3) {
         cell.textLabel.text = @"Push Notifications";
-        self.pushNotificationSwitch = [[UISwitch alloc] init];
-        cell.accessoryView = self.pushNotificationSwitch;
+    } else if (indexPath.item == 4) {
+        cell.textLabel.text = @"Auto Offline";
+    } else if (indexPath.item == 5) {
+        cell.textLabel.text = @"Help";
+    } else {
+        cell.textLabel.text = @"Logout";
+        cell.textLabel.backgroundColor = [UIColor clearColor];
+        cell.textLabel.textColor = [UIColor blackColor];
+        cell.textLabel.textAlignment = NSTextAlignmentCenter;
+        cell.contentView.backgroundColor = [UIColor redColor];
+        cell.accessoryType = UITableViewCellAccessoryNone;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return cell;
@@ -79,11 +91,24 @@
         SPAboutViewController* aboutViewController = [[SPAboutViewController alloc] init];
         [(SPTabViewController *)self.tabBarController pushViewController:aboutViewController animated:YES];
     } else if (indexPath.item == 1) {
-        SPFeedbackViewController* feedbackViewController = [[SPFeedbackViewController alloc] init];
-        [(SPTabViewController *)self.tabBarController pushViewController:feedbackViewController animated:YES];
+        SPInviteFacebookFriendsViewController* inviteFacebokkFriendsVieController = [[SPInviteFacebookFriendsViewController alloc] init];
+        [(SPTabViewController *)self.tabBarController pushViewController:inviteFacebokkFriendsVieController animated:YES];
     } else if (indexPath.item == 2) {
+        SPAllContactsViewController* allContactsViewController = [[SPAllContactsViewController alloc] init];
+        [(SPTabViewController *)self.tabBarController pushViewController:allContactsViewController animated:YES];
+    } else if (indexPath.item == 3) {
+        SPNotificationsViewController* notificationsViewController = [[SPNotificationsViewController alloc] init];
+        [(SPTabViewController *)self.tabBarController pushViewController:notificationsViewController animated:YES];
+    } else if (indexPath.item == 4) {
         SPLogoutViewController* logoutViewController = [[SPLogoutViewController alloc] init];
         [(SPTabViewController *)self.tabBarController pushViewController:logoutViewController animated:YES];
+    } else if (indexPath.item == 5) {
+        SPFeedbackViewController* feedbackViewController = [[SPFeedbackViewController alloc] init];
+        [(SPTabViewController *)self.tabBarController pushViewController:feedbackViewController animated:YES];
+    } else {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userExists"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
 

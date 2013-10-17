@@ -79,6 +79,9 @@
 		4B56865717F3CDB2008E0938 /* SPMessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B56865617F3CDB2008E0938 /* SPMessageTableViewCell.m */; };
 		4B86C76D1803834900F6A522 /* one.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B86C76B1803834900F6A522 /* one.png */; };
 		4B86C76E1803834900F6A522 /* one@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B86C76C1803834900F6A522 /* one@2x.png */; };
+		4BCDC38A180F571A0079F287 /* SPInviteFacebookFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCDC389180F571A0079F287 /* SPInviteFacebookFriendsViewController.m */; };
+		4BCDC38D180F65DF0079F287 /* SPAllContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCDC38C180F65DF0079F287 /* SPAllContactsViewController.m */; };
+		4BCDC390180F69200079F287 /* SPNotificationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCDC38F180F69200079F287 /* SPNotificationsViewController.m */; };
 		BF83F42217FFB4FE0095E379 /* chatOverlay.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BF83F41C17FFB4FD0095E379 /* chatOverlay.jpg */; };
 		BF83F42317FFB4FE0095E379 /* eye_icon.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BF83F41D17FFB4FD0095E379 /* eye_icon.jpg */; };
 		BF83F42417FFB4FE0095E379 /* pin_icon.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BF83F41E17FFB4FD0095E379 /* pin_icon.jpg */; };
@@ -243,6 +246,12 @@
 		4B56865617F3CDB2008E0938 /* SPMessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPMessageTableViewCell.m; path = Views/SPMessageTableViewCell.m; sourceTree = "<group>"; };
 		4B86C76B1803834900F6A522 /* one.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = one.png; path = Images/one.png; sourceTree = "<group>"; };
 		4B86C76C1803834900F6A522 /* one@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "one@2x.png"; path = "Images/one@2x.png"; sourceTree = "<group>"; };
+		4BCDC388180F571A0079F287 /* SPInviteFacebookFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPInviteFacebookFriendsViewController.h; path = Controller/SPInviteFacebookFriendsViewController.h; sourceTree = "<group>"; };
+		4BCDC389180F571A0079F287 /* SPInviteFacebookFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPInviteFacebookFriendsViewController.m; path = Controller/SPInviteFacebookFriendsViewController.m; sourceTree = "<group>"; };
+		4BCDC38B180F65DF0079F287 /* SPAllContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPAllContactsViewController.h; path = Controller/SPAllContactsViewController.h; sourceTree = "<group>"; };
+		4BCDC38C180F65DF0079F287 /* SPAllContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPAllContactsViewController.m; path = Controller/SPAllContactsViewController.m; sourceTree = "<group>"; };
+		4BCDC38E180F69200079F287 /* SPNotificationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPNotificationsViewController.h; path = Controller/SPNotificationsViewController.h; sourceTree = "<group>"; };
+		4BCDC38F180F69200079F287 /* SPNotificationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPNotificationsViewController.m; path = Controller/SPNotificationsViewController.m; sourceTree = "<group>"; };
 		BF83F41C17FFB4FD0095E379 /* chatOverlay.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = chatOverlay.jpg; path = Images/chatOverlay.jpg; sourceTree = "<group>"; };
 		BF83F41D17FFB4FD0095E379 /* eye_icon.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = eye_icon.jpg; path = Images/eye_icon.jpg; sourceTree = "<group>"; };
 		BF83F41E17FFB4FD0095E379 /* pin_icon.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = pin_icon.jpg; path = Images/pin_icon.jpg; sourceTree = "<group>"; };
@@ -410,6 +419,12 @@
 				BF83F43517FFCAB20095E379 /* SPFeedbackViewController.m */,
 				BF83F43917FFD0D20095E379 /* SPCallViewController.h */,
 				BF83F43A17FFD0D20095E379 /* SPCallViewController.m */,
+				4BCDC388180F571A0079F287 /* SPInviteFacebookFriendsViewController.h */,
+				4BCDC389180F571A0079F287 /* SPInviteFacebookFriendsViewController.m */,
+				4BCDC38B180F65DF0079F287 /* SPAllContactsViewController.h */,
+				4BCDC38C180F65DF0079F287 /* SPAllContactsViewController.m */,
+				4BCDC38E180F69200079F287 /* SPNotificationsViewController.h */,
+				4BCDC38F180F69200079F287 /* SPNotificationsViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -739,6 +754,7 @@
 				4B56860517F29CC6008E0938 /* NSEntityDescription+MagicalDataImport.m in Sources */,
 				4B11E1BE17E69F20003E2891 /* MASViewConstraint.m in Sources */,
 				4B11E1BC17E69F20003E2891 /* MASConstraintMaker.m in Sources */,
+				4BCDC38A180F571A0079F287 /* SPInviteFacebookFriendsViewController.m in Sources */,
 				BF83F43B17FFD0D20095E379 /* SPCallViewController.m in Sources */,
 				BF83F43617FFCAB20095E379 /* SPFeedbackViewController.m in Sources */,
 				4B56860F17F29CC6008E0938 /* NSManagedObjectContext+MagicalObserving.m in Sources */,
@@ -755,6 +771,7 @@
 				4B11E1E617E9647F003E2891 /* SPChatViewController.m in Sources */,
 				4B56861417F29CC6008E0938 /* NSPersistentStore+MagicalRecord.m in Sources */,
 				4B11E1CE17E7DE7F003E2891 /* SPContactsViewController.m in Sources */,
+				4BCDC38D180F65DF0079F287 /* SPAllContactsViewController.m in Sources */,
 				4B56860417F29CC6008E0938 /* NSAttributeDescription+MagicalDataImport.m in Sources */,
 				4B56861B17F29CC6008E0938 /* MagicalRecord+ShorthandSupport.m in Sources */,
 				4B11E1CB17E6C4EA003E2891 /* SPUserManager.m in Sources */,
@@ -787,6 +804,7 @@
 				4B56861517F29CC6008E0938 /* NSPersistentStoreCoordinator+MagicalRecord.m in Sources */,
 				4B11E1E917E9660D003E2891 /* SPChatView.m in Sources */,
 				4B4CF3F517FA840A004F568B /* SPMapViewController.m in Sources */,
+				4BCDC390180F69200079F287 /* SPNotificationsViewController.m in Sources */,
 				4B11E1D717E7ED68003E2891 /* SPContactsManager.m in Sources */,
 				BF83F43017FFBF7F0095E379 /* SPAboutViewController.m in Sources */,
 				4B56864E17F3C6C2008E0938 /* SPContact.m in Sources */,
