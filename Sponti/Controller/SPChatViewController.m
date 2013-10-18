@@ -47,7 +47,7 @@
         self.conversation = conversation;
         self.groupChat = (self.conversation.contacts.count > 1);
         
-        self.contact = [self.conversation.contacts anyObject];
+//        self.contact = [self.conversation.contacts anyObject];
         
         UIBarButtonItem* menuBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(didTapOnMenuBarButtonItem)];
         self.navigationItem.rightBarButtonItem = menuBarButtonItem;
@@ -63,7 +63,8 @@
 - (void)loadView {
     self.chatView = [[SPChatView alloc] init];
     self.chatView.delegate = self;
-    [self.chatView setContact:self.contact forGroupChat:self.groupChat];
+    [self.chatView setConversation:self.conversation];
+//    [self.chatView setContact:self.contact forGroupChat:self.groupChat];
     
     self.chatView.blockedView.hidden = (self.groupChat || ![self.contact.blocked boolValue]);
     
@@ -161,7 +162,7 @@
         [self.chatView.conversation addMessagesObject:message];
         
         [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-            [self.chatView setContact:self.contact forGroupChat:self.groupChat];
+            [self.chatView setConversation:self.conversation];
             NSLog(@"Add CONTACT TO CONVERSATIONS");
             NSLog(@"SUCCESS: %@", success ? @"YES" : @"NO");
             NSLog(@"ERROR: %@",error.debugDescription);
@@ -243,7 +244,7 @@
         [self.chatView.conversation addMessagesObject:message];
         
         [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-            [self.chatView setContact:contact forGroupChat:YES];
+            [self.chatView setConversation:self.conversation];
             NSLog(@"Add CONTACT TO CONVERSATIONS");
             NSLog(@"SUCCESS: %@", success ? @"YES" : @"NO");
             NSLog(@"ERROR: %@",error.debugDescription);
@@ -262,7 +263,7 @@
         [self.chatView.conversation addMessagesObject:message];
         
         [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-            [self.chatView setContact:self.contact forGroupChat:self.groupChat];
+            [self.chatView setConversation:self.conversation];
             NSLog(@"Add CONTACT TO CONVERSATIONS");
             NSLog(@"SUCCESS: %@", success ? @"YES" : @"NO");
             NSLog(@"ERROR: %@",error.debugDescription);
