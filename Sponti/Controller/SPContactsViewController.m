@@ -94,7 +94,7 @@
             self.title = @"Regional";
             break;
         case SPContactsTypeInvite:
-            self.title = @"Invite";
+            self.title = @"Choose";
             break;
     }
 }
