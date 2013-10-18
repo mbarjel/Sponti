@@ -47,8 +47,6 @@
         self.conversation = conversation;
         self.groupChat = (self.conversation.contacts.count > 1);
         
-//        self.contact = [self.conversation.contacts anyObject];
-        
         UIBarButtonItem* menuBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(didTapOnMenuBarButtonItem)];
         self.navigationItem.rightBarButtonItem = menuBarButtonItem;
         
@@ -64,7 +62,6 @@
     self.chatView = [[SPChatView alloc] init];
     self.chatView.delegate = self;
     [self.chatView setConversation:self.conversation];
-//    [self.chatView setContact:self.contact forGroupChat:self.groupChat];
     
     self.chatView.blockedView.hidden = (self.groupChat || ![self.contact.blocked boolValue]);
     

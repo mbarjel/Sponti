@@ -14,6 +14,7 @@
 @property (nonatomic, strong) UIView* bubbleView;
 @property (nonatomic, strong) UILabel* messageLabel;
 @property (nonatomic, strong) UILabel* fromLabel;
+@property (nonatomic, strong) UILabel* dateTimeLabel;
 
 @end
 
@@ -45,6 +46,12 @@
         self.fromLabel.font = [UIFont boldSystemFontOfSize:10.f];
         self.fromLabel.textColor = [UIColor grayColor];
         [self.bubbleView addSubview:self.fromLabel];
+        
+        self.dateTimeLabel = [[UILabel alloc] init];
+        self.dateTimeLabel.backgroundColor = [UIColor clearColor];
+        self.dateTimeLabel.font = [UIFont systemFontOfSize:8.f];
+        self.dateTimeLabel.textColor = [UIColor grayColor];
+        [self.contentView addSubview:self.dateTimeLabel];
     }
     return self;
 }
@@ -101,14 +108,10 @@
             if (type == SPMessageTypeSent) {
                 bubbleViewFrame.origin.x = 320 - bubbleViewFrame.size.width - 4;
             }
-            
             self.bubbleView.frame = bubbleViewFrame;
         }
-        
         self.fromLabel.frame = CGRectMake(5, self.bubbleView.frame.size.height - 20, self.bubbleView.frame.size.width, 20);
     }
-    
-    
 }
 
 - (void)prepareForReuse {

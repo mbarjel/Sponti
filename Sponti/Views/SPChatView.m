@@ -144,33 +144,20 @@
     } else {
         _messages = [NSArray array];
     }
+    
+    for (SPContact* contactInConversation in [_conversation.contacts allObjects]) {
+        UIImageView* imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:contactInConversation.imageName]];
+        imageView.frame = CGRectMake([[_conversation.contacts allObjects] indexOfObject:contactInConversation] * 40, 0, 40, 40);
+        [self.contactsContainerView addSubview:imageView];
+        self.contactsContainerView.contentSize = CGSizeMake(imageView.frame.origin.x + imageView.frame.size.width, 40);
+    }
+    
+    if (_conversation.contacts.count == 1) {
+        self.contactNameLabel.text = _contact.title;
+    } else {
+        self.contactNameLabel.text = @"";
+    }
 }
-
-//- (void)setContact:(SPContact *)contact forGroupChat:(BOOL)groupChat {
-//    _contact = contact;
-//    _groupChat = groupChat;
-//    _conversation = [[SPContactsManager sharedManager] getConversationForContact:_contact forGroupChat:groupChat];
-//    if (_conversation.messages.count) {
-//        _messages = [SPMessage MR_findByAttribute:@"conversation" withValue:_conversation andOrderBy:@"date" ascending:YES];
-//        [self.tableView reloadData];
-//        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:_messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
-//    } else {
-//        _messages = [NSArray array];
-//    }
-//    
-//    for (SPContact* contactInConversation in [_conversation.contacts allObjects]) {
-//        UIImageView* imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:contactInConversation.imageName]];
-//        imageView.frame = CGRectMake([[_conversation.contacts allObjects] indexOfObject:contactInConversation] * 40, 0, 40, 40);
-//        [self.contactsContainerView addSubview:imageView];
-//        self.contactsContainerView.contentSize = CGSizeMake(imageView.frame.origin.x + imageView.frame.size.width, 40);
-//    }
-//    
-//    if (_conversation.contacts.count == 1) {
-//        self.contactNameLabel.text = _contact.title;
-//    } else {
-//        self.contactNameLabel.text = @"";
-//    }
-//}
 
 - (void)createConversation {
     SPConversation* converstaion = [SPConversation MR_createEntity];

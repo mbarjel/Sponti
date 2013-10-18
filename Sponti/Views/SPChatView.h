@@ -31,6 +31,4 @@
 - (void)setMenuView:(UIView *)menuView;
 - (void)openMenu:(BOOL)openMenu;
 
-//- (void)setContact:(SPContact *)contact forGroupChat:(BOOL)groupChat;
-
 @end
