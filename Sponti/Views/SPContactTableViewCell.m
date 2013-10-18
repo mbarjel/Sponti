@@ -14,7 +14,7 @@
 @property (nonatomic, strong) UILabel* nameLabel;
 @property (nonatomic, strong) UIButton* blockButton;
 @property (nonatomic, strong) UIButton* favouriteButton;
-@property (nonatomic, strong) NSArray* imageViews;
+@property (nonatomic, strong) UIImageView* contactImageView;
 
 @end
 
@@ -62,18 +62,23 @@
             make.height.equalTo(self.contentView.height);
             make.width.equalTo(@40);
         }];
-        _imageViews = [NSArray array];
+        
+        self.contactImageView = [[UIImageView alloc] init];
+        [self.contentView addSubview:self.contactImageView];
+        [self.contactImageView makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.contentView.left);
+            make.top.equalTo(self.contentView.top);
+            make.bottom.equalTo(self.contentView.bottom);
+            make.width.equalTo(self.contentView.height);
+        }];
     }
     return self;
 }
 
 - (void)setContact:(SPContact *)contact {
     _contact = contact;
-    UIImageView* imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:contact.imageName]];
-    imageView.frame = CGRectMake(0, 0, 60, 60);
-    [self.contentView addSubview:imageView];
+    [self.contactImageView setImage:[UIImage imageNamed:contact.imageName]];
     self.nameLabel.text = contact.title;
-    _imageViews = @[imageView];
     
     [self updateForBlocked:[contact.blocked boolValue]];
     [self updateForFavourite:[contact.favourite boolValue]];
@@ -84,22 +89,15 @@
     self.blockButton.hidden = YES;
     self.favouriteButton.hidden = YES;
     
-    NSArray* contactsArray = [_conversation.contacts allObjects];
-    NSMutableArray* imageViews = [NSMutableArray array];
-    for (SPContact* contact in contactsArray) {
-        int indexOfContact = [contactsArray indexOfObject:contact];
-        UIImageView* imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:contact.imageName]];
-        imageView.frame = CGRectMake(indexOfContact * 60, 0, 60, 60);
-        [self.contentView addSubview:imageView];
-        [imageViews addObject:imageView];
-    }
-    self.imageViews = [NSArray arrayWithArray:imageViews];
+    SPContact* contact = [_conversation.contacts anyObject];
+    
+    [self.contactImageView setImage:[UIImage imageNamed:contact.imageName]];
+    
     
     if (_conversation.contacts.count == 1) {
-        SPContact* contact = [_conversation.contacts anyObject];
         self.nameLabel.text = contact.title;
     } else {
-        self.nameLabel.text = @"";
+        self.nameLabel.text = [NSString stringWithFormat:@"%@ + %d other%@",contact.title,_conversation.contacts.count - 1,(_conversation.contacts.count == 2) ? @"" : @"s"];
     }
 }
 
@@ -136,14 +134,6 @@
     } else {
         [self updateForFavourite:![_contact.favourite boolValue]];
         [[SPContactsManager sharedManager] updateContact:_contact asFavourite:![_contact.favourite boolValue]];
-    }
-}
-
-#pragma mark - prepare for reuse
-
-- (void)prepareForReuse {
-    for (UIImageView* imageView in self.imageViews) {
-        [imageView removeFromSuperview];
     }
 }
 
