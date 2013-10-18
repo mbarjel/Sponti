@@ -12,7 +12,6 @@
 
 @interface SPChatViewController : UIViewController
 
-- (id)initWithContact:(SPContact *)contact;
 - (id)initWithConversation:(SPConversation *)conversation;
 
 @end

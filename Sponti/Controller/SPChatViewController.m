@@ -30,26 +30,15 @@
 
 @property (nonatomic, strong) UIImageView* chatOverlayImageView;
 
+@property (nonatomic, assign) BOOL block;
+@property (nonatomic, assign) BOOL favourite;
+@property (nonatomic, assign) BOOL invite;
+@property (nonatomic, assign) BOOL map;
+@property (nonatomic, assign) BOOL call;
+
 @end
 
 @implementation SPChatViewController
-
-- (id)initWithContact:(SPContact *)contact {
-    self = [super init];
-    if (self) {
-        self.title = contact.title;
-        self.groupChat = NO;
-        self.contact = contact;
-        UIBarButtonItem* menuBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(didTapOnMenuBarButtonItem)];
-        self.navigationItem.rightBarButtonItem = menuBarButtonItem;
-        
-        self.menuViewController = [[SPChatMenuViewController alloc] initWithContact:self.contact];
-        self.menuViewController.delegate = self;
-        [self addChildViewController:self.menuViewController];
-        [self.menuViewController didMoveToParentViewController:self];
-    }
-    return self;
-}
 
 - (id)initWithConversation:(SPConversation *)conversation {
     self = [super init];
@@ -97,7 +86,6 @@
 
 - (void)didTapOnMenuBarButtonItem {
     CGFloat originX = self.chatView.chatContainerView.frame.origin.x;
-    NSLog(@"%f",originX);
     if ((originX > -100.f && originX != 0) || originX == -220.f) {
         self.menuIsOpen = NO;
     } else {
@@ -118,30 +106,75 @@
 #pragma mark - SPChatMenuViewControllerDelegate
 
 - (void)didTapOnBlockInChatMenuViewController:(SPChatMenuViewController *)chatMenuViewController {
-    self.contact.blocked = [NSNumber numberWithBool:![self.contact.blocked boolValue]];
-    self.chatView.blockedView.hidden = ![self.contact.blocked boolValue];
-    [self didTapOnMenuBarButtonItem];
+    if (self.chatView.conversation.contacts.count > 1) {
+        _block = YES;
+        _favourite = NO;
+        _invite = NO;
+        _map = NO;
+        _call = NO;
+        
+        NSMutableArray* contacts = [[SPContact MR_findAll] mutableCopy];
+        for (SPContact* contact in [self.conversation.contacts allObjects]) {
+            [contacts removeObject:contact];
+        }
+        
+        SPContactsViewController* contactsViewController = [[SPContactsViewController alloc] initWithType:SPContactsTypeInvite];
+        contactsViewController.delegate = self;
+        [contactsViewController filterOutContacts:contacts];
+        [contactsViewController setHideButtons:YES];
+        [self.navigationController pushViewController:contactsViewController animated:YES];
+        
+    } else {
+        self.contact.blocked = [NSNumber numberWithBool:![self.contact.blocked boolValue]];
+        self.chatView.blockedView.hidden = ![self.contact.blocked boolValue];
+        [self didTapOnMenuBarButtonItem];
+    }
 }
 
 - (void)didTapOnFavouriteInChatMenuViewController:(SPChatMenuViewController *)chatMenuViewController {
-    self.contact.favourite = [NSNumber numberWithBool:![self.contact.favourite boolValue]];
-    [self didTapOnMenuBarButtonItem];
-    
-    SPMessage* message = [SPMessage MR_createEntity];
-    message.contactID = @"invite";
-    message.text = [NSString stringWithFormat:@"%@ %@ to favourites",self.contact.title,[self.contact.favourite boolValue] ? @"added" : @"removed"];
-    message.date = [NSDate date];
-    [self.chatView.conversation addMessagesObject:message];
-    
-    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        [self.chatView setContact:self.contact forGroupChat:self.groupChat];
-        NSLog(@"Add CONTACT TO CONVERSATIONS");
-        NSLog(@"SUCCESS: %@", success ? @"YES" : @"NO");
-        NSLog(@"ERROR: %@",error.debugDescription);
-    }];
+    if (self.chatView.conversation.contacts.count > 1) {
+        _block = NO;
+        _favourite = YES;
+        _invite = NO;
+        _map = NO;
+        _call = NO;
+        
+        NSMutableArray* contacts = [[SPContact MR_findAll] mutableCopy];
+        for (SPContact* contact in [self.conversation.contacts allObjects]) {
+            [contacts removeObject:contact];
+        }
+        
+        SPContactsViewController* contactsViewController = [[SPContactsViewController alloc] initWithType:SPContactsTypeInvite];
+        contactsViewController.delegate = self;
+        [contactsViewController filterOutContacts:contacts];
+        [contactsViewController setHideButtons:YES];
+        [self.navigationController pushViewController:contactsViewController animated:YES];
+        
+    } else {
+        self.contact.favourite = [NSNumber numberWithBool:![self.contact.favourite boolValue]];
+        [self didTapOnMenuBarButtonItem];
+        
+        SPMessage* message = [SPMessage MR_createEntity];
+        message.contactID = @"invite";
+        message.text = [NSString stringWithFormat:@"%@ %@ favourites",self.contact.title,[self.contact.favourite boolValue] ? @"added to" : @"removed from"];
+        message.date = [NSDate date];
+        [self.chatView.conversation addMessagesObject:message];
+        
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+            [self.chatView setContact:self.contact forGroupChat:self.groupChat];
+            NSLog(@"Add CONTACT TO CONVERSATIONS");
+            NSLog(@"SUCCESS: %@", success ? @"YES" : @"NO");
+            NSLog(@"ERROR: %@",error.debugDescription);
+        }];
+    }
 }
 
 - (void)didTapOnInviteInChatMenuViewController:(SPChatMenuViewController *)chatMenuViewController {
+    _block = NO;
+    _favourite = NO;
+    _invite = YES;
+    _map = NO;
+    _call = NO;
     SPContactsViewController* contactsViewController = [[SPContactsViewController alloc] initWithType:SPContactsTypeInvite];
     contactsViewController.delegate = self;
     [contactsViewController filterOutContacts:[self.chatView.conversation.contacts allObjects]];
@@ -150,36 +183,103 @@
 }
 
 - (void)didTapOnMapInChatMenuViewController:(SPChatMenuViewController *)chatMenuViewController {
-    SPMapViewController* mapViewController = [[SPMapViewController alloc] initWithContact:[self.chatView.conversation.contacts anyObject]];
-    [self.navigationController pushViewController:mapViewController animated:YES];
+    if (self.chatView.conversation.contacts.count > 1) {
+        _block = NO;
+        _favourite = NO;
+        _invite = NO;
+        _map = YES;
+        _call = NO;
+        
+        NSMutableArray* contacts = [[SPContact MR_findAll] mutableCopy];
+        for (SPContact* contact in [self.conversation.contacts allObjects]) {
+            [contacts removeObject:contact];
+        }
+        
+        SPContactsViewController* contactsViewController = [[SPContactsViewController alloc] initWithType:SPContactsTypeInvite];
+        contactsViewController.delegate = self;
+        [contactsViewController filterOutContacts:contacts];
+        [contactsViewController setHideButtons:YES];
+        [self.navigationController pushViewController:contactsViewController animated:YES];
+    } else {
+        SPMapViewController* mapViewController = [[SPMapViewController alloc] initWithContact:[self.conversation.contacts anyObject]];
+        [self.navigationController pushViewController:mapViewController animated:YES];
+    }
 }
 
 - (void)didTapOnCallInChatMenuViewController:(SPChatMenuViewController *)chatMenuViewController {
-    SPCallViewController* callViewController = [[SPCallViewController alloc] initWithContact:[self.chatView.conversation.contacts anyObject]];
-    [self.navigationController pushViewController:callViewController animated:YES];
-    
+    if (self.chatView.conversation.contacts.count > 1) {
+        _block = NO;
+        _favourite = NO;
+        _invite = NO;
+        _map = NO;
+        _call = YES;
+        
+        NSMutableArray* contacts = [[SPContact MR_findAll] mutableCopy];
+        for (SPContact* contact in [self.conversation.contacts allObjects]) {
+            [contacts removeObject:contact];
+        }
+        
+        SPContactsViewController* contactsViewController = [[SPContactsViewController alloc] initWithType:SPContactsTypeInvite];
+        contactsViewController.delegate = self;
+        [contactsViewController filterOutContacts:contacts];
+        [contactsViewController setHideButtons:YES];
+        [self.navigationController pushViewController:contactsViewController animated:YES];
+    } else {
+        SPCallViewController* callViewController = [[SPCallViewController alloc] initWithContact:[self.conversation.contacts anyObject]];
+        [self.navigationController pushViewController:callViewController animated:YES];
+    }
 }
 
 #pragma mark - SPContactsViewControllerDelegate
 
-- (void)contactsViewController:(SPContactsViewController *)contactsViewController didInviteContact:(SPContact *)contact {
-    [self.chatView.conversation addContactsObject:contact];
-    
-    SPMessage* message = [SPMessage MR_createEntity];
-    message.contactID = @"invite";
-    message.text = [NSString stringWithFormat:@"%@ added to conversation",contact.title];
-    message.date = [NSDate date];
-    [self.chatView.conversation addMessagesObject:message];
-    
-    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        [self.chatView setContact:contact forGroupChat:YES];
-        NSLog(@"Add CONTACT TO CONVERSATIONS");
-        NSLog(@"SUCCESS: %@", success ? @"YES" : @"NO");
-        NSLog(@"ERROR: %@",error.debugDescription);
-    }];
-    
-    [self.navigationController popViewControllerAnimated:YES];
-    [self didTapOnMenuBarButtonItem];
+- (void)contactsViewController:(SPContactsViewController *)contactsViewController didChooseContact:(SPContact *)contact {
+    if (_invite) {
+        [self.chatView.conversation addContactsObject:contact];
+        
+        SPMessage* message = [SPMessage MR_createEntity];
+        message.contactID = @"invite";
+        message.text = [NSString stringWithFormat:@"%@ added to conversation",contact.title];
+        message.date = [NSDate date];
+        [self.chatView.conversation addMessagesObject:message];
+        
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+            [self.chatView setContact:contact forGroupChat:YES];
+            NSLog(@"Add CONTACT TO CONVERSATIONS");
+            NSLog(@"SUCCESS: %@", success ? @"YES" : @"NO");
+            NSLog(@"ERROR: %@",error.debugDescription);
+        }];
+        
+        [self.navigationController popViewControllerAnimated:YES];
+        [self didTapOnMenuBarButtonItem];
+    } else if (_favourite) {
+        contact.favourite = [NSNumber numberWithBool:![contact.favourite boolValue]];
+        [self didTapOnMenuBarButtonItem];
+        
+        SPMessage* message = [SPMessage MR_createEntity];
+        message.contactID = @"invite";
+        message.text = [NSString stringWithFormat:@"%@ %@ favourites",self.contact.title,[contact.favourite boolValue] ? @"added to" : @"removed from"];
+        message.date = [NSDate date];
+        [self.chatView.conversation addMessagesObject:message];
+        
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+            [self.chatView setContact:self.contact forGroupChat:self.groupChat];
+            NSLog(@"Add CONTACT TO CONVERSATIONS");
+            NSLog(@"SUCCESS: %@", success ? @"YES" : @"NO");
+            NSLog(@"ERROR: %@",error.debugDescription);
+        }];
+        [self.navigationController popViewControllerAnimated:YES];
+    } else if (_block) {
+        contact.blocked = [NSNumber numberWithBool:![contact.blocked boolValue]];
+        self.chatView.blockedView.hidden = YES;//![contact.blocked boolValue];
+        [self didTapOnMenuBarButtonItem];
+        [self.navigationController popViewControllerAnimated:YES];
+    } else if (_map) {
+        SPMapViewController* mapViewController = [[SPMapViewController alloc] initWithContact:contact];
+        [self.navigationController pushViewController:mapViewController animated:YES];
+    } else {
+        SPCallViewController* callViewController = [[SPCallViewController alloc] initWithContact:contact];
+        [self.navigationController pushViewController:callViewController animated:YES];
+    }
 }
 
 #pragma mark - SPChatViewDelegate

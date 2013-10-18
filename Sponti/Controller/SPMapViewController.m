@@ -9,6 +9,7 @@
 #import "SPMapViewController.h"
 #import <MapKit/MapKit.h>
 #import "SPAnnotationView.h"
+#import "SPContactsViewController.h"
 
 #define METERS_PER_MILE 1609.344
 
@@ -86,6 +87,13 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    if ([[self.navigationController.viewControllers objectAtIndex:self.navigationController.viewControllers.count-2] isKindOfClass:[SPContactsViewController class]]) {
+        UIViewController* viewControllerToRemove = [self.navigationController.viewControllers objectAtIndex:self.navigationController.viewControllers.count-2];
+        NSMutableArray* viewControllers = [self.navigationController.viewControllers mutableCopy];
+        [viewControllers removeObject:viewControllerToRemove];
+        [self.navigationController setViewControllers:[NSArray arrayWithArray:viewControllers]];
+    }
     
     CLLocationCoordinate2D zoomLocation;
     zoomLocation.latitude = -33.8204667;

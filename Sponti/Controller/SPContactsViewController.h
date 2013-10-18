@@ -15,7 +15,7 @@
 
 @optional
 
-- (void)contactsViewController:(SPContactsViewController *)contactsViewController didInviteContact:(SPContact *)contact;
+- (void)contactsViewController:(SPContactsViewController *)contactsViewController didChooseContact:(SPContact *)contact;
 
 @end
 

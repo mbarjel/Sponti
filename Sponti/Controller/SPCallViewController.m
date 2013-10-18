@@ -7,6 +7,7 @@
 //
 
 #import "SPCallViewController.h"
+#import "SPContactsViewController.h"
 
 @interface SPCallViewController ()
 
@@ -52,6 +53,16 @@
         [self.endCallImageView addGestureRecognizer:tapGestureRecognizer];
     }
     return self;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if ([[self.navigationController.viewControllers objectAtIndex:self.navigationController.viewControllers.count-2] isKindOfClass:[SPContactsViewController class]]) {
+        UIViewController* viewControllerToRemove = [self.navigationController.viewControllers objectAtIndex:self.navigationController.viewControllers.count-2];
+        NSMutableArray* viewControllers = [self.navigationController.viewControllers mutableCopy];
+        [viewControllers removeObject:viewControllerToRemove];
+        [self.navigationController setViewControllers:[NSArray arrayWithArray:viewControllers]];
+    }
 }
 
 - (void)endCall {

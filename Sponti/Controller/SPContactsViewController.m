@@ -153,10 +153,10 @@
         contact = [self.filteredContacts objectAtIndex:indexPath.item];
     }
     if (self.type == SPContactsTypeInvite) {
-        [self.delegate contactsViewController:self didInviteContact:contact];
+        [self.delegate contactsViewController:self didChooseContact:contact];
     } else {
         if (![contact.blocked boolValue]) {
-            SPChatViewController* chatViewController = [[SPChatViewController alloc] initWithContact:contact];
+            SPChatViewController* chatViewController = [[SPChatViewController alloc] initWithConversation:[[SPContactsManager sharedManager] getConversationForContact:contact forGroupChat:NO]];
             [(SPTabViewController *)self.tabBarController pushViewController:chatViewController animated:YES];
         } else {
             [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Cannot begin conversation with blocked user" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
