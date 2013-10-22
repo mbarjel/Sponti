@@ -10,7 +10,7 @@
 
 @interface SPChatMenuViewController () <UITableViewDataSource, UITableViewDelegate>
 
-@property (nonatomic, strong) SPContact* contact;
+@property (nonatomic, strong) SPConversation* conversation;
 
 @property (nonatomic, strong) UITableView* tableView;
 @property (nonatomic, strong) NSArray* items;
@@ -19,14 +19,18 @@
 
 @implementation SPChatMenuViewController
 
-- (id)initWithContact:(SPContact *)contact {
-    self = [super init];
+- (id)initWithConversation:(SPConversation *)conversation {
     if (self) {
         self.view.backgroundColor = [UIColor blackColor];
         
-        self.contact = contact;
+        self.conversation = conversation;
         
-        self.items = @[[self.contact.blocked boolValue] ? @"Unblock" : @"Block",[self.contact.favourite boolValue] ? @"Unfavourite" : @"Favourite",@"Invite Contact",@"Map",@"Call"];
+        if (self.conversation.contacts.count > 1) {
+            self.items = @[@"Block",@"Favourite",@"Invite Friend",@"Map",@"Call"];
+        } else {
+            SPContact* contact = [self.conversation.contacts anyObject];
+            self.items = @[[contact.blocked boolValue] ? @"Unblock" : @"Block",[contact.favourite boolValue] ? @"Unfavourite" : @"Favourite",@"Invite Friend",@"Map",@"Call"];
+        }
         
         self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
         self.tableView.backgroundColor = [UIColor blackColor];
@@ -81,8 +85,11 @@
             break;
     }
     
-    self.items = @[[self.contact.blocked boolValue] ? @"Unblock" : @"Block",[self.contact.favourite boolValue] ? @"Unfavourite" : @"Favourite",@"Invite Contact",@"Map",@"Call"];
-    [self.tableView reloadData];
+    if (self.conversation.contacts.count > 1) {
+        SPContact* contact = [self.conversation.contacts anyObject];
+        self.items = @[[contact.blocked boolValue] ? @"Unblock" : @"Block",[contact.favourite boolValue] ? @"Unfavourite" : @"Favourite",@"Invite Contact",@"Map",@"Call"];
+        [self.tableView reloadData];
+    }
 }
 
 @end

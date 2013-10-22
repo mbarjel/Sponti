@@ -106,6 +106,8 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    
+    self.tableView.contentOffset = CGPointMake(0, self.searchBar.frame.size.height);
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

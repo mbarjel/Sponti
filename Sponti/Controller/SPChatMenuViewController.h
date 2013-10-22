@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SPConversation.h"
 #import "SPContact.h"
 
 @class SPChatMenuViewController;
@@ -25,6 +26,6 @@
 
 @property (nonatomic, weak) id<SPChatMenuViewControllerDelegate> delegate;
 
-- (id)initWithContact:(SPContact *)contact;
+- (id)initWithConversation:(SPConversation *)conversation;
 
 @end

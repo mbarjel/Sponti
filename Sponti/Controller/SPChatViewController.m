@@ -19,7 +19,6 @@
 
 @interface SPChatViewController () <SPChatMenuViewControllerDelegate, SPContactsViewControllerDelegate, SPChatViewDelagate>
 
-@property (nonatomic, strong) SPContact* contact;
 @property (nonatomic, strong) SPConversation* conversation;
 @property (nonatomic, strong) SPChatView* chatView;
 
@@ -50,7 +49,7 @@
         UIBarButtonItem* menuBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(didTapOnMenuBarButtonItem)];
         self.navigationItem.rightBarButtonItem = menuBarButtonItem;
         
-        self.menuViewController = [[SPChatMenuViewController alloc] initWithContact:[self.conversation.contacts anyObject]];
+        self.menuViewController = [[SPChatMenuViewController alloc] initWithConversation:self.conversation];
         self.menuViewController.delegate = self;
         [self addChildViewController:self.menuViewController];
         [self.menuViewController didMoveToParentViewController:self];
@@ -63,7 +62,16 @@
     self.chatView.delegate = self;
     [self.chatView setConversation:self.conversation];
     
-    self.chatView.blockedView.hidden = (self.groupChat || ![self.contact.blocked boolValue]);
+    if (self.groupChat) {
+        self.chatView.blockedView.hidden = YES;
+    } else {
+        SPContact* contact = [self.conversation.contacts anyObject];
+        if ([contact.blocked boolValue]) {
+            self.chatView.blockedView.hidden = NO;
+        } else {
+            self.chatView.blockedView.hidden = YES;
+        }
+    }
     
     [self.chatView setMenuView:self.menuViewController.view];
     
@@ -123,9 +131,16 @@
         [self.navigationController pushViewController:contactsViewController animated:YES];
         
     } else {
-        self.contact.blocked = [NSNumber numberWithBool:![self.contact.blocked boolValue]];
-        self.chatView.blockedView.hidden = ![self.contact.blocked boolValue];
+        SPContact* contact = [self.conversation.contacts anyObject];
+        contact.blocked = [NSNumber numberWithBool:![contact.blocked boolValue]];
+        self.chatView.blockedView.hidden = ![contact.blocked boolValue];
         [self didTapOnMenuBarButtonItem];
+        
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+            NSLog(@"BLOCKED CONTACT");
+            NSLog(@"SUCCESS: %@", success ? @"YES" : @"NO");
+            NSLog(@"ERROR: %@",error.debugDescription);
+        }];
     }
 }
 
@@ -149,12 +164,13 @@
         [self.navigationController pushViewController:contactsViewController animated:YES];
         
     } else {
-        self.contact.favourite = [NSNumber numberWithBool:![self.contact.favourite boolValue]];
+        SPContact* contact = [self.conversation.contacts anyObject];
+        contact.favourite = [NSNumber numberWithBool:![contact.favourite boolValue]];
         [self didTapOnMenuBarButtonItem];
         
         SPMessage* message = [SPMessage MR_createEntity];
         message.contactID = @"invite";
-        message.text = [NSString stringWithFormat:@"%@ %@ favourites",self.contact.title,[self.contact.favourite boolValue] ? @"added to" : @"removed from"];
+        message.text = [NSString stringWithFormat:@"%@ %@ favourites",contact.title,[contact.favourite boolValue] ? @"added to" : @"removed from"];
         message.date = [NSDate date];
         [self.chatView.conversation addMessagesObject:message];
         
@@ -255,7 +271,7 @@
         
         SPMessage* message = [SPMessage MR_createEntity];
         message.contactID = @"invite";
-        message.text = [NSString stringWithFormat:@"%@ %@ favourites",self.contact.title,[contact.favourite boolValue] ? @"added to" : @"removed from"];
+        message.text = [NSString stringWithFormat:@"%@ %@ favourites",contact.title,[contact.favourite boolValue] ? @"added to" : @"removed from"];
         message.date = [NSDate date];
         [self.chatView.conversation addMessagesObject:message];
         
