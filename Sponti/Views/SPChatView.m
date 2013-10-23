@@ -26,8 +26,6 @@
 @property (nonatomic, strong) UITextView* textView;
 @property (nonatomic, strong) UIButton* sendButton;
 
-@property (nonatomic, strong) SPContact* contact;
-
 @property (nonatomic, assign) BOOL groupChat;
 
 @property (nonatomic, strong) UITapGestureRecognizer* tapGestureRecognizer;
@@ -153,15 +151,11 @@
     }
     
     if (_conversation.contacts.count == 1) {
-        self.contactNameLabel.text = _contact.title;
+        SPContact* contact = [_conversation.contacts anyObject];
+        self.contactNameLabel.text = contact.title;
     } else {
         self.contactNameLabel.text = @"";
     }
-}
-
-- (void)createConversation {
-    SPConversation* converstaion = [SPConversation MR_createEntity];
-    [converstaion addContactsObject:_contact];
 }
 
 - (void)setMenuView:(UIView *)menuView {

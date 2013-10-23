@@ -28,6 +28,8 @@
 
 @property (nonatomic, strong) UIBarButtonItem* editBarButtonItem;
 
+@property (nonatomic, strong) UIView* searchOverlayView;
+
 @end
 
 @implementation SPContactsViewController
@@ -51,6 +53,14 @@
         [self.tableView setTableHeaderView:self.searchBar];
         [self.view addSubview:self.tableView];
         self.hideButtons = NO;
+        
+        _searchOverlayView = [[UIView alloc] init];
+        _searchOverlayView.backgroundColor = [UIColor blackColor];
+        _searchOverlayView.alpha = 0.0;
+        UITapGestureRecognizer* tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapOnSearchOverlay)];
+        [_searchOverlayView addGestureRecognizer:tapGestureRecognizer];
+        [self.view addSubview:_searchOverlayView];
+        _searchOverlayView.frame = CGRectMake(0, 0, 320, 480);
     }
     return self;
 }
@@ -72,6 +82,7 @@
     }
     [self.tableView reloadData];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     
@@ -110,6 +121,12 @@
 }
 
 #pragma mark - UIKeyboardNotification
+
+- (void)keyboardWillShow:(id)sender {
+    [UIView animateWithDuration:0.25 animations:^{
+        _searchOverlayView.alpha = 0.6;
+    }];
+}
 
 - (void)keyboardDidShow:(id)sender {
     self.tableView.frame = CGRectMake(0, 0, 320, 200);
@@ -170,6 +187,7 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     if (![searchBar.text isEqualToString:@""]) {
+        _searchOverlayView.alpha = 0.0;
         self.displaySearchResults = YES;
         NSMutableArray* searchResults = [NSMutableArray array];
         for (SPContact* contact in self.filteredContacts) {
@@ -196,6 +214,17 @@
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    self.searchBar.text = @"";
+    [self.searchBar resignFirstResponder];
+    self.displaySearchResults = NO;
+    [self.tableView reloadData];
+    _searchOverlayView.alpha = 0.0;
+}
+
+#pragma mark - UIGestureRecognizer
+
+- (void)didTapOnSearchOverlay {
+    _searchOverlayView.alpha = 0.0;
     self.searchBar.text = @"";
     [self.searchBar resignFirstResponder];
     self.displaySearchResults = NO;
