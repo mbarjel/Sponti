@@ -26,7 +26,6 @@
 		4B11E1BC17E69F20003E2891 /* MASConstraintMaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B11E1B117E69F20003E2891 /* MASConstraintMaker.m */; };
 		4B11E1BD17E69F20003E2891 /* MASViewAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B11E1B517E69F20003E2891 /* MASViewAttribute.m */; };
 		4B11E1BE17E69F20003E2891 /* MASViewConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B11E1B717E69F20003E2891 /* MASViewConstraint.m */; };
-		4B11E1BF17E69F20003E2891 /* UIView+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B11E1B917E69F20003E2891 /* UIView+MASAdditions.m */; };
 		4B11E1C517E6C2D1003E2891 /* SPSplashView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B11E1C417E6C2D1003E2891 /* SPSplashView.m */; };
 		4B11E1C817E6C2EF003E2891 /* SPTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B11E1C717E6C2EF003E2891 /* SPTabViewController.m */; };
 		4B11E1CB17E6C4EA003E2891 /* SPUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B11E1CA17E6C4EA003E2891 /* SPUserManager.m */; };
@@ -97,6 +96,10 @@
 		BF83F43817FFCBEF0095E379 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF83F43717FFCBEF0095E379 /* MessageUI.framework */; };
 		BF83F43B17FFD0D20095E379 /* SPCallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF83F43A17FFD0D20095E379 /* SPCallViewController.m */; };
 		BF83F43D17FFD3D40095E379 /* endCall.png in Resources */ = {isa = PBXBuildFile; fileRef = BF83F43C17FFD3D40095E379 /* endCall.png */; };
+		BF89943C181B5CF40013C7A6 /* MASLayoutConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = BF899434181B5CF40013C7A6 /* MASLayoutConstraint.m */; };
+		BF89943D181B5CF40013C7A6 /* Masonry-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BF899435181B5CF40013C7A6 /* Masonry-Info.plist */; };
+		BF89943E181B5CF40013C7A6 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = BF899438181B5CF40013C7A6 /* NSLayoutConstraint+MASDebugAdditions.m */; };
+		BF89943F181B5CF40013C7A6 /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = BF89943A181B5CF40013C7A6 /* View+MASAdditions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -143,9 +146,6 @@
 		4B11E1B517E69F20003E2891 /* MASViewAttribute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MASViewAttribute.m; sourceTree = "<group>"; };
 		4B11E1B617E69F20003E2891 /* MASViewConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASViewConstraint.h; sourceTree = "<group>"; };
 		4B11E1B717E69F20003E2891 /* MASViewConstraint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MASViewConstraint.m; sourceTree = "<group>"; };
-		4B11E1B817E69F20003E2891 /* UIView+MASAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MASAdditions.h"; sourceTree = "<group>"; };
-		4B11E1B917E69F20003E2891 /* UIView+MASAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+MASAdditions.m"; sourceTree = "<group>"; };
-		4B11E1BA17E69F20003E2891 /* UIView+MASShorthandAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MASShorthandAdditions.h"; sourceTree = "<group>"; };
 		4B11E1C317E6C2D1003E2891 /* SPSplashView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPSplashView.h; path = Views/SPSplashView.h; sourceTree = "<group>"; };
 		4B11E1C417E6C2D1003E2891 /* SPSplashView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPSplashView.m; path = Views/SPSplashView.m; sourceTree = "<group>"; };
 		4B11E1C617E6C2EF003E2891 /* SPTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPTabViewController.h; path = Controller/SPTabViewController.h; sourceTree = "<group>"; };
@@ -271,6 +271,15 @@
 		BF83F43917FFD0D20095E379 /* SPCallViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPCallViewController.h; path = Controller/SPCallViewController.h; sourceTree = "<group>"; };
 		BF83F43A17FFD0D20095E379 /* SPCallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPCallViewController.m; path = Controller/SPCallViewController.m; sourceTree = "<group>"; };
 		BF83F43C17FFD3D40095E379 /* endCall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = endCall.png; path = Images/endCall.png; sourceTree = "<group>"; };
+		BF899433181B5CF40013C7A6 /* MASLayoutConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASLayoutConstraint.h; sourceTree = "<group>"; };
+		BF899434181B5CF40013C7A6 /* MASLayoutConstraint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MASLayoutConstraint.m; sourceTree = "<group>"; };
+		BF899435181B5CF40013C7A6 /* Masonry-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Masonry-Info.plist"; sourceTree = "<group>"; };
+		BF899436181B5CF40013C7A6 /* MASUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASUtilities.h; sourceTree = "<group>"; };
+		BF899437181B5CF40013C7A6 /* NSLayoutConstraint+MASDebugAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSLayoutConstraint+MASDebugAdditions.h"; sourceTree = "<group>"; };
+		BF899438181B5CF40013C7A6 /* NSLayoutConstraint+MASDebugAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSLayoutConstraint+MASDebugAdditions.m"; sourceTree = "<group>"; };
+		BF899439181B5CF40013C7A6 /* View+MASAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+MASAdditions.h"; sourceTree = "<group>"; };
+		BF89943A181B5CF40013C7A6 /* View+MASAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "View+MASAdditions.m"; sourceTree = "<group>"; };
+		BF89943B181B5CF40013C7A6 /* View+MASShorthandAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+MASShorthandAdditions.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -487,6 +496,15 @@
 		4B11E1AC17E69F20003E2891 /* Masonry */ = {
 			isa = PBXGroup;
 			children = (
+				BF899433181B5CF40013C7A6 /* MASLayoutConstraint.h */,
+				BF899434181B5CF40013C7A6 /* MASLayoutConstraint.m */,
+				BF899435181B5CF40013C7A6 /* Masonry-Info.plist */,
+				BF899436181B5CF40013C7A6 /* MASUtilities.h */,
+				BF899437181B5CF40013C7A6 /* NSLayoutConstraint+MASDebugAdditions.h */,
+				BF899438181B5CF40013C7A6 /* NSLayoutConstraint+MASDebugAdditions.m */,
+				BF899439181B5CF40013C7A6 /* View+MASAdditions.h */,
+				BF89943A181B5CF40013C7A6 /* View+MASAdditions.m */,
+				BF89943B181B5CF40013C7A6 /* View+MASShorthandAdditions.h */,
 				4B11E1AD17E69F20003E2891 /* MASCompositeConstraint.h */,
 				4B11E1AE17E69F20003E2891 /* MASCompositeConstraint.m */,
 				4B11E1AF17E69F20003E2891 /* MASConstraint.h */,
@@ -498,9 +516,6 @@
 				4B11E1B517E69F20003E2891 /* MASViewAttribute.m */,
 				4B11E1B617E69F20003E2891 /* MASViewConstraint.h */,
 				4B11E1B717E69F20003E2891 /* MASViewConstraint.m */,
-				4B11E1B817E69F20003E2891 /* UIView+MASAdditions.h */,
-				4B11E1B917E69F20003E2891 /* UIView+MASAdditions.m */,
-				4B11E1BA17E69F20003E2891 /* UIView+MASShorthandAdditions.h */,
 			);
 			name = Masonry;
 			path = Externals/Masonry;
@@ -720,6 +735,7 @@
 				BF83F42517FFB4FE0095E379 /* pin.png in Resources */,
 				BF83F42917FFB8120095E379 /* restuarant.jpg in Resources */,
 				BF83F42D17FFBBE40095E379 /* mapOverlay.jpg in Resources */,
+				BF89943D181B5CF40013C7A6 /* Masonry-Info.plist in Resources */,
 				BF83F42B17FFB9810095E379 /* maleicon.jpg in Resources */,
 				BF83F42717FFB4FE0095E379 /* tabBarOverlay.jpg in Resources */,
 				4B86C76D1803834900F6A522 /* one.png in Resources */,
@@ -763,6 +779,7 @@
 				4B11E1D417E7DEB4003E2891 /* SPSettingsViewController.m in Sources */,
 				4B56861817F29CC6008E0938 /* MagicalRecord+iCloud.m in Sources */,
 				4B56860D17F29CC6008E0938 /* NSManagedObject+MagicalRecord.m in Sources */,
+				BF89943E181B5CF40013C7A6 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				4B56861A17F29CC6008E0938 /* MagicalRecord+Setup.m in Sources */,
 				4B11E1E317E8252F003E2891 /* NSArray+SPFunctional.m in Sources */,
 				4B56861C17F29CC6008E0938 /* MagicalRecord.m in Sources */,
@@ -782,7 +799,6 @@
 				4B56860C17F29CC6008E0938 /* NSManagedObject+MagicalFinders.m in Sources */,
 				4B4CF3FD17FA9BC8004F568B /* SPAnnotationView.m in Sources */,
 				4B56865117F3C6C3008E0938 /* SPConversation.m in Sources */,
-				4B11E1BF17E69F20003E2891 /* UIView+MASAdditions.m in Sources */,
 				4B56861117F29CC6008E0938 /* NSManagedObjectContext+MagicalSaves.m in Sources */,
 				4B56861F17F29CEF008E0938 /* Sponti.xcdatamodeld in Sources */,
 				4B11E1C817E6C2EF003E2891 /* SPTabViewController.m in Sources */,
@@ -800,9 +816,11 @@
 				4B56865717F3CDB2008E0938 /* SPMessageTableViewCell.m in Sources */,
 				4B4CF3C917F949C9004F568B /* SPChatMapViewController.m in Sources */,
 				4B11E1BB17E69F20003E2891 /* MASCompositeConstraint.m in Sources */,
+				BF89943F181B5CF40013C7A6 /* View+MASAdditions.m in Sources */,
 				4B56860717F29CC6008E0938 /* NSObject+MagicalDataImport.m in Sources */,
 				4B56861517F29CC6008E0938 /* NSPersistentStoreCoordinator+MagicalRecord.m in Sources */,
 				4B11E1E917E9660D003E2891 /* SPChatView.m in Sources */,
+				BF89943C181B5CF40013C7A6 /* MASLayoutConstraint.m in Sources */,
 				4B4CF3F517FA840A004F568B /* SPMapViewController.m in Sources */,
 				4BCDC390180F69200079F287 /* SPNotificationsViewController.m in Sources */,
 				4B11E1D717E7ED68003E2891 /* SPContactsManager.m in Sources */,

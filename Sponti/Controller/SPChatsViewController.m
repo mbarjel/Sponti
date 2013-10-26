@@ -70,6 +70,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     
     self.tableView.contentOffset = CGPointMake(0, self.searchBar.frame.size.height);
+    
+    _searchOverlayView.alpha = 0.0;
 }
 
 #pragma mark - UIKeyboardNotification

@@ -6,54 +6,131 @@
 //  Copyright (c) 2013 cloudling. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "MASUtilities.h"
 
-enum {
-    MASLayoutPriorityRequired = UILayoutPriorityRequired,
-    MASLayoutPriorityDefaultHigh = UILayoutPriorityDefaultHigh,
-    MASLayoutPriorityDefaultMedium = 500,
-    MASLayoutPriorityDefaultLow = UILayoutPriorityDefaultLow,
-    MASLayoutPriorityFittingSizeLevel = UILayoutPriorityFittingSizeLevel,
-};
-typedef float MASLayoutPriority;
+@protocol MASConstraintDelegate;
 
+/**
+ *	Enables Constraints to be created with chainable syntax
+ *  Constraint can represent single NSLayoutConstraint (MASViewConstraint) 
+ *  or a group of NSLayoutConstraints (MASComposisteConstraint)
+ */
 @protocol MASConstraint <NSObject>
 
-//NSLayoutConstraint constant proxies
-@property (nonatomic, copy, readonly) id<MASConstraint> (^insets)(UIEdgeInsets insets);
+/**
+ *	Usually MASConstraintMaker but could be a parent MASConstraint
+ */
+@property (nonatomic, weak) id<MASConstraintDelegate> delegate;
+
+/**
+ *	Modifies the NSLayoutConstraint constant,
+ *  only affects MASConstraints in which the first item's NSLayoutAttribute is one of the following 
+ *  NSLayoutAttributeTop, NSLayoutAttributeLeft, NSLayoutAttributeBottom, NSLayoutAttributeRight
+ */
+@property (nonatomic, copy, readonly) id<MASConstraint> (^insets)(MASEdgeInsets insets);
+
+/**
+ *	Modifies the NSLayoutConstraint constant,
+ *  only affects MASConstraints in which the first item's NSLayoutAttribute is one of the following
+ *  NSLayoutAttributeWidth, NSLayoutAttributeHeight
+ */
 @property (nonatomic, copy, readonly) id<MASConstraint> (^sizeOffset)(CGSize offset);
+
+/**
+ *	Modifies the NSLayoutConstraint constant,
+ *  only affects MASConstraints in which the first item's NSLayoutAttribute is one of the following
+ *  NSLayoutAttributeCenterX, NSLayoutAttributeCenterY
+ */
 @property (nonatomic, copy, readonly) id<MASConstraint> (^centerOffset)(CGPoint offset);
+
+
+/**
+ *	Modifies the NSLayoutConstraint constant
+ */
 @property (nonatomic, copy, readonly) id<MASConstraint> (^offset)(CGFloat offset);
 
-//NSLayoutConstraint multiplier proxies
-@property (nonatomic, copy, readonly) id<MASConstraint> (^percent)(CGFloat percent);
+/**
+ *	Sets the NSLayoutConstraint multiplier property
+ */
+@property (nonatomic, copy, readonly) id<MASConstraint> (^multipliedBy)(CGFloat multiplier);
 
-//MASLayoutPriority proxies
+/**
+ *	Sets the NSLayoutConstraint multiplier to 1.0/dividedBy
+ */
+@property (nonatomic, copy, readonly) id<MASConstraint> (^dividedBy)(CGFloat divider);
+
+/**
+ *	Sets the NSLayoutConstraint priority to a float or MASLayoutPriority
+ */
 @property (nonatomic, copy, readonly) id<MASConstraint> (^priority)(MASLayoutPriority priority);
+
+/**
+ *	Sets the NSLayoutConstraint priority to MASLayoutPriorityLow
+ */
 @property (nonatomic, copy, readonly) id<MASConstraint> (^priorityLow)();
+
+/**
+ *	Sets the NSLayoutConstraint priority to MASLayoutPriorityMedium
+ */
 @property (nonatomic, copy, readonly) id<MASConstraint> (^priorityMedium)();
+
+/**
+ *	Sets the NSLayoutConstraint priority to MASLayoutPriorityHigh
+ */
 @property (nonatomic, copy, readonly) id<MASConstraint> (^priorityHigh)();
 
-//NSLayoutRelation proxies
+/**
+ *	Sets the constraint relation to NSLayoutRelationEqual
+ *  returns a block which accepts one of the following:
+ *    MASViewAttribute, UIView, NSNumber, NSArray
+ *  see readme for more details.
+ */
 @property (nonatomic, copy, readonly) id<MASConstraint> (^equalTo)(id attr);
+
+/**
+ *	Sets the constraint relation to NSLayoutRelationGreaterThanOrEqual
+ *  returns a block which accepts one of the following:
+ *    MASViewAttribute, UIView, NSNumber, NSArray
+ *  see readme for more details.
+ */
 @property (nonatomic, copy, readonly) id<MASConstraint> (^greaterThanOrEqualTo)(id attr);
+
+/**
+ *	Sets the constraint relation to NSLayoutRelationLessThanOrEqual
+ *  returns a block which accepts one of the following:
+ *    MASViewAttribute, UIView, NSNumber, NSArray
+ *  see readme for more details.
+ */
 @property (nonatomic, copy, readonly) id<MASConstraint> (^lessThanOrEqualTo)(id attr);
 
-//semantic properties
+/**
+ *	optional semantic property which has no effect but improves the readability of constraint
+ */
 @property (nonatomic, copy, readonly) id<MASConstraint> with;
 
 /**
- Creates a NSLayoutConstraint. The constraint is added to the first view or the or the closest common superview of the first and second view. 
+ *	Sets the constraint debug name
  */
-- (void)commit;
+@property (nonatomic, copy, readonly) id<MASConstraint> (^key)(id key);
+
+/**
+ *	Creates a NSLayoutConstraint. The constraint is installed to the first view or the or the closest common superview of the first and second view. 
+ */
+- (void)install;
+
+/**
+ *	Removes previously installed NSLayoutConstraint
+ */
+- (void)uninstall;
 
 @end
 
 @protocol MASConstraintDelegate <NSObject>
 
 /**
- Notifies the delegate when the constraint is has the minimum set of properties, has a NSLayoutRelation and view
+ *	Notifies the delegate when the constraint needs to be replaced with another constraint. For example 
+ *  A MASViewConstraint may turn into a MASCompositeConstraint when an array is passed to one of the equality blocks
  */
-- (void)addConstraint:(id<MASConstraint>)constraint;
+- (void)constraint:(id<MASConstraint>)constraint shouldBeReplacedWithConstraint:(id<MASConstraint>)replacementConstraint;
 
 @end

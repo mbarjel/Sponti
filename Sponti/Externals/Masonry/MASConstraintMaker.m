@@ -10,17 +10,18 @@
 #import "MASViewConstraint.h"
 #import "MASCompositeConstraint.h"
 #import "MASViewAttribute.h"
+#import "View+MASAdditions.h"
 
 @interface MASConstraintMaker () <MASConstraintDelegate>
 
-@property (nonatomic, weak) UIView *view;
+@property (nonatomic, weak) MAS_VIEW *view;
 @property (nonatomic, strong) NSMutableArray *constraints;
 
 @end
 
 @implementation MASConstraintMaker
 
-- (id)initWithView:(UIView *)view {
+- (id)initWithView:(MAS_VIEW *)view {
     self = [super init];
     if (!self) return nil;
     
@@ -30,92 +31,114 @@
     return self;
 }
 
-- (void)commit {
-    for (id<MASConstraint> constraint in self.constraints) {
-        [constraint commit];
+- (NSArray *)install {
+    NSArray *constraints = self.constraints.copy;
+    for (id<MASConstraint> constraint in constraints) {
+        [constraint install];
     }
     [self.constraints removeAllObjects];
+    return constraints;
 }
 
 #pragma mark - MASConstraintDelegate
 
-- (void)addConstraint:(id<MASConstraint>)constraint {
-    [self.constraints addObject:constraint];
+- (void)constraint:(id<MASConstraint>)constraint shouldBeReplacedWithConstraint:(id<MASConstraint>)replacementConstraint {
+    NSUInteger index = [self.constraints indexOfObject:constraint];
+    NSAssert(index != NSNotFound, @"Could not find constraint %@", constraint);
+    [self.constraints replaceObjectAtIndex:index withObject:replacementConstraint];
 }
 
 #pragma mark - constraint properties
 
-- (id<MASConstraint>)constraintWithLayoutAttribute:(NSLayoutAttribute)layoutAttribute {
+- (id<MASConstraint>)addConstraintWithLayoutAttribute:(NSLayoutAttribute)layoutAttribute {
     MASViewAttribute *viewAttribute = [[MASViewAttribute alloc] initWithView:self.view layoutAttribute:layoutAttribute];
     MASViewConstraint *constraint = [[MASViewConstraint alloc] initWithFirstViewAttribute:viewAttribute];
     constraint.delegate = self;
+    [self.constraints addObject:constraint];
     return constraint;
 }
 
 #pragma mark - standard Attributes
 
 - (id<MASConstraint>)left {
-    return [self constraintWithLayoutAttribute:NSLayoutAttributeLeft];
+    return [self addConstraintWithLayoutAttribute:NSLayoutAttributeLeft];
 }
 
 - (id<MASConstraint>)top {
-    return [self constraintWithLayoutAttribute:NSLayoutAttributeTop];
+    return [self addConstraintWithLayoutAttribute:NSLayoutAttributeTop];
 }
 
 - (id<MASConstraint>)right {
-    return [self constraintWithLayoutAttribute:NSLayoutAttributeRight];
+    return [self addConstraintWithLayoutAttribute:NSLayoutAttributeRight];
 }
 
 - (id<MASConstraint>)bottom {
-    return [self constraintWithLayoutAttribute:NSLayoutAttributeBottom];
+    return [self addConstraintWithLayoutAttribute:NSLayoutAttributeBottom];
 }
 
 - (id<MASConstraint>)leading {
-    return [self constraintWithLayoutAttribute:NSLayoutAttributeLeading];
+    return [self addConstraintWithLayoutAttribute:NSLayoutAttributeLeading];
 }
 
 - (id<MASConstraint>)trailing {
-    return [self constraintWithLayoutAttribute:NSLayoutAttributeTrailing];
+    return [self addConstraintWithLayoutAttribute:NSLayoutAttributeTrailing];
 }
 
 - (id<MASConstraint>)width {
-    return [self constraintWithLayoutAttribute:NSLayoutAttributeWidth];
+    return [self addConstraintWithLayoutAttribute:NSLayoutAttributeWidth];
 }
 
 - (id<MASConstraint>)height {
-    return [self constraintWithLayoutAttribute:NSLayoutAttributeHeight];
+    return [self addConstraintWithLayoutAttribute:NSLayoutAttributeHeight];
 }
 
 - (id<MASConstraint>)centerX {
-    return [self constraintWithLayoutAttribute:NSLayoutAttributeCenterX];
+    return [self addConstraintWithLayoutAttribute:NSLayoutAttributeCenterX];
 }
 
 - (id<MASConstraint>)centerY {
-    return [self constraintWithLayoutAttribute:NSLayoutAttributeCenterY];
+    return [self addConstraintWithLayoutAttribute:NSLayoutAttributeCenterY];
 }
 
 - (id<MASConstraint>)baseline {
-    return [self constraintWithLayoutAttribute:NSLayoutAttributeBaseline];
+    return [self addConstraintWithLayoutAttribute:NSLayoutAttributeBaseline];
 }
 
 
 #pragma mark - composite Attributes
 
 - (id<MASConstraint>)edges {
-    MASCompositeConstraint *constraint = [[MASCompositeConstraint alloc] initWithView:self.view type:MASCompositeConstraintTypeEdges];
+    NSArray *children = @[
+        [[MASViewConstraint alloc] initWithFirstViewAttribute:self.view.mas_top],
+        [[MASViewConstraint alloc] initWithFirstViewAttribute:self.view.mas_left],
+        [[MASViewConstraint alloc] initWithFirstViewAttribute:self.view.mas_bottom],
+        [[MASViewConstraint alloc] initWithFirstViewAttribute:self.view.mas_right]
+    ];
+    MASCompositeConstraint *constraint = [[MASCompositeConstraint alloc] initWithChildren:children];
     constraint.delegate = self;
+    [self.constraints addObject:constraint];
     return constraint;
 }
 
 - (id<MASConstraint>)size {
-    MASCompositeConstraint *constraint = [[MASCompositeConstraint alloc] initWithView:self.view type:MASCompositeConstraintTypeSize];
+    NSArray *children = @[
+        [[MASViewConstraint alloc] initWithFirstViewAttribute:self.view.mas_width],
+        [[MASViewConstraint alloc] initWithFirstViewAttribute:self.view.mas_height]
+    ];
+    MASCompositeConstraint *constraint = [[MASCompositeConstraint alloc] initWithChildren:children];
     constraint.delegate = self;
+    [self.constraints addObject:constraint];
     return constraint;
 }
 
 - (id<MASConstraint>)center {
-    MASCompositeConstraint *constraint = [[MASCompositeConstraint alloc] initWithView:self.view type:MASCompositeConstraintTypeCenter];
+    NSArray *children = @[
+        [[MASViewConstraint alloc] initWithFirstViewAttribute:self.view.mas_centerX],
+        [[MASViewConstraint alloc] initWithFirstViewAttribute:self.view.mas_centerY]
+    ];
+    MASCompositeConstraint *constraint = [[MASCompositeConstraint alloc] initWithChildren:children];
     constraint.delegate = self;
+    [self.constraints addObject:constraint];
     return constraint;
 }
 @end

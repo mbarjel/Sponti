@@ -49,8 +49,8 @@
         
         self.dateTimeLabel = [[UILabel alloc] init];
         self.dateTimeLabel.backgroundColor = [UIColor clearColor];
-        self.dateTimeLabel.font = [UIFont systemFontOfSize:8.f];
-        self.dateTimeLabel.textColor = [UIColor grayColor];
+        self.dateTimeLabel.font = [UIFont systemFontOfSize:12.f];
+        self.dateTimeLabel.textColor = [UIColor darkGrayColor];
         [self.contentView addSubview:self.dateTimeLabel];
     }
     return self;
@@ -72,7 +72,6 @@
         bubbleViewFrame.size.width = 310;
         bubbleViewFrame.size.height = 17;
         self.bubbleView.backgroundColor = [UIColor colorWithWhite:170.f/255.f alpha:1.f];
-        
     } else {
         self.messageLabel.textAlignment = NSTextAlignmentLeft;
         self.bubbleView.frame = CGRectMake(5, 2, 200, 100 - 4);
@@ -112,6 +111,26 @@
         }
         self.fromLabel.frame = CGRectMake(5, self.bubbleView.frame.size.height - 20, self.bubbleView.frame.size.width, 20);
     }
+    
+    if (type == SPMessageTypeInvite) {
+        self.dateTimeLabel.hidden = YES;
+    } else {
+        self.dateTimeLabel.hidden = NO;
+        
+        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+        
+        dateFormatter.dateFormat = @"h:mm:ss a MMM dd YYYY";
+        self.dateTimeLabel.text = [dateFormatter stringFromDate:message.date];
+        
+        if (type == SPMessageTypeReceived) {
+            self.dateTimeLabel.frame = CGRectMake(8, self.bubbleView.frame.origin.y + self.bubbleView.frame.size.height, 200, 16);
+            self.dateTimeLabel.textAlignment = NSTextAlignmentLeft;
+        } else {
+            self.dateTimeLabel.frame = CGRectMake(120, self.bubbleView.frame.origin.y + self.bubbleView.frame.size.height, 194, 16);
+            self.dateTimeLabel.textAlignment = NSTextAlignmentRight;
+        }
+    }
+    
 }
 
 - (void)prepareForReuse {

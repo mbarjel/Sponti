@@ -6,19 +6,19 @@
 //  Copyright (c) 2013 cloudling. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "MASUtilities.h"
 
 @interface MASViewAttribute : NSObject
 
-@property (nonatomic, weak, readonly) UIView *view;
+@property (nonatomic, weak, readonly) MAS_VIEW *view;
 @property (nonatomic, assign, readonly) NSLayoutAttribute layoutAttribute;
 
-- (id)initWithView:(UIView *)view layoutAttribute:(NSLayoutAttribute)layoutAttribute;
+- (id)initWithView:(MAS_VIEW *)view layoutAttribute:(NSLayoutAttribute)layoutAttribute;
 
 /**
- Creates a MASConstraintMaker with the callee view. any constraints defined are added to the view or the appropriate superview once the block has finished executing
-
- @return YES if layoutAttribute is equal to NSLayoutAttributeWidth or NSLayoutAttributeHeight
+ *	Determine whether the layoutAttribute is a size attribute
+ *
+ *	@return	YES if layoutAttribute is equal to NSLayoutAttributeWidth or NSLayoutAttributeHeight
  */
 - (BOOL)isSizeAttribute;
 

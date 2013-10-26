@@ -369,7 +369,7 @@
         return 20;
     } else {
         CGSize textSize = [message.text sizeWithFont:[UIFont systemFontOfSize:12.f] constrainedToSize:CGSizeMake(200, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping];
-        CGFloat height = textSize.height;
+        CGFloat height = textSize.height + 30;
         if (self.groupChat && ![message.contactID isEqualToString:@"0"]) {
             height += 34;
         } else {

@@ -6,12 +6,15 @@
 //  Copyright (c) 2013 Jonas Budelmann. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "UIView+MASAdditions.h"
+#import "View+MASAdditions.h"
 
 #ifdef MAS_SHORTHAND
 
-@interface UIView (MASShorthandAdditions)
+/**
+ *	Shorthand view additions without the 'mas_' prefixes,
+ *  only enabled if MAS_SHORTHAND is defined
+ */
+@interface MAS_VIEW (MASShorthandAdditions)
 
 @property (nonatomic, strong, readonly) MASViewAttribute *left;
 @property (nonatomic, strong, readonly) MASViewAttribute *top;
@@ -25,7 +28,7 @@
 @property (nonatomic, strong, readonly) MASViewAttribute *centerY;
 @property (nonatomic, strong, readonly) MASViewAttribute *baseline;
 
-- (void)makeConstraints:(void(^)(MASConstraintMaker *make))block;
+- (NSArray *)makeConstraints:(void(^)(MASConstraintMaker *make))block;
 
 @end
 
@@ -34,7 +37,7 @@
     return [self mas_##attr];   \
 }
 
-@implementation UIView (MASShorthandAdditions)
+@implementation MAS_VIEW (MASShorthandAdditions)
 
 MAS_ATTR_FORWARD(top);
 MAS_ATTR_FORWARD(left);
@@ -48,8 +51,8 @@ MAS_ATTR_FORWARD(centerX);
 MAS_ATTR_FORWARD(centerY);
 MAS_ATTR_FORWARD(baseline);
 
-- (void)makeConstraints:(void(^)(MASConstraintMaker *))block {
-    [self mas_makeConstraints:block];
+- (NSArray *)makeConstraints:(void(^)(MASConstraintMaker *))block {
+    return [self mas_makeConstraints:block];
 }
 
 @end

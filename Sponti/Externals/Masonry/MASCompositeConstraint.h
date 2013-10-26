@@ -6,22 +6,23 @@
 //  Copyright (c) 2013 cloudling. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import "MASConstraint.h"
+#import "MASUtilities.h"
 
-typedef NS_ENUM(NSInteger, MASCompositeConstraintType) {
-    MASCompositeConstraintTypeEdges, //top, left, bottom, right
-    MASCompositeConstraintTypeSize, //width, height
-    MASCompositeConstraintTypeCenter, //centerX, centerY
-};
-
+/**
+ *	A group of MASConstraint objects
+ *  conforms to MASConstraint
+ */
 @interface MASCompositeConstraint : NSObject <MASConstraint>
 
-@property (nonatomic, weak) id<MASConstraintDelegate> delegate;
-@property (nonatomic, weak, readonly) UIView *view;
-@property (nonatomic, assign, readonly) MASCompositeConstraintType type;
-
-- (id)initWithView:(UIView *)view type:(MASCompositeConstraintType)type;
-- (id)initWithView:(UIView *)view children:(NSArray *)children;
+/**
+ *	Creates a composite with a predefined array of children
+ *
+ *	@param	view	first item view
+ *	@param	children	child MASConstraints
+ *
+ *	@return	a composite constraint
+ */
+- (id)initWithChildren:(NSArray *)children;
 
 @end

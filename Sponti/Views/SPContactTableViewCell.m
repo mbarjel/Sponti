@@ -8,6 +8,7 @@
 
 #import "SPContactTableViewCell.h"
 #import "SPContactsManager.h"
+#import "SPMessage.h"
 
 @interface SPContactTableViewCell ()
 
@@ -15,6 +16,11 @@
 @property (nonatomic, strong) UIButton* blockButton;
 @property (nonatomic, strong) UIButton* favouriteButton;
 @property (nonatomic, strong) UIImageView* contactImageView;
+
+@property (nonatomic, strong) UILabel* lastMessageLabel;
+@property (nonatomic, strong) UILabel* lastMessageDateLabel;
+
+@property (nonatomic, strong) id<MASConstraint> nameLabelConstraint;
 
 @end
 
@@ -31,12 +37,14 @@
         self.nameLabel = [[UILabel alloc] init];
         self.nameLabel.backgroundColor = [UIColor clearColor];
         self.nameLabel.font = [UIFont systemFontOfSize:14.f];
+        self.nameLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
         [self.contentView addSubview:self.nameLabel];
         
         [self.nameLabel makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(self.contentView.centerY);
-            make.left.equalTo(@70);
-            make.right.equalTo(self.contentView.right).with.offset(-10);
+            _nameLabelConstraint = make.top.equalTo(@20);
+            make.height.equalTo(@20);
+            make.left.equalTo(@64);
+            make.right.equalTo(self.contentView.right).with.offset(-68);
         }];
         
         self.blockButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -71,6 +79,37 @@
             make.bottom.equalTo(self.contentView.bottom);
             make.width.equalTo(self.contentView.height);
         }];
+        
+        _lastMessageDateLabel = [[UILabel alloc] init];
+        _lastMessageDateLabel.backgroundColor = [UIColor clearColor];
+        _lastMessageDateLabel.textAlignment = NSTextAlignmentRight;
+        _lastMessageDateLabel.textColor = [UIColor darkGrayColor];
+        _lastMessageDateLabel.font = [UIFont systemFontOfSize:12.f];
+        _lastMessageDateLabel.numberOfLines = 2;
+        _lastMessageDateLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        [self.contentView addSubview:_lastMessageDateLabel];
+        
+        [_lastMessageDateLabel makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.contentView.right).with.offset(-80);
+            make.top.equalTo(self.contentView.top);
+            make.bottom.equalTo(self.contentView.bottom);
+            make.right.equalTo(self.contentView.right).with.offset(-2);
+        }];
+        
+        _lastMessageLabel = [[UILabel alloc] init];
+        _lastMessageLabel.backgroundColor = [UIColor clearColor];
+        _lastMessageLabel.textColor = [UIColor lightGrayColor];
+        _lastMessageLabel.font = [UIFont systemFontOfSize:12.f];
+        _lastMessageLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        [self.contentView addSubview:_lastMessageLabel];
+        
+        [_lastMessageLabel makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView.top).with.offset(20);
+            make.left.equalTo(self.contentView.left).with.offset(64);
+            make.right.equalTo(self.contentView.right).with.offset(-60);
+            make.bottom.equalTo(self.contentView.bottom);
+        }];
+        
     }
     return self;
 }
@@ -82,6 +121,14 @@
     
     [self updateForBlocked:[contact.blocked boolValue]];
     [self updateForFavourite:[contact.favourite boolValue]];
+    
+    _lastMessageDateLabel.hidden = YES;
+    _lastMessageLabel.hidden = YES;
+    
+    [_nameLabelConstraint uninstall];
+    [_nameLabel makeConstraints:^(MASConstraintMaker *make) {
+        _nameLabelConstraint = make.top.equalTo(self.contentView.top).with.offset(20);
+    }];
 }
 
 - (void)setConversation:(SPConversation *)conversation {
@@ -99,6 +146,35 @@
     } else {
         self.nameLabel.text = [NSString stringWithFormat:@"%@ + %d other%@",contact.title,_conversation.contacts.count - 1,(_conversation.contacts.count == 2) ? @"" : @"s"];
     }
+    
+    SPMessage* latestMessage;
+    NSDate* currentLatestDate;
+    
+    for (SPMessage* message in [_conversation.messages allObjects]) {
+        if (!latestMessage && ![message.contactID isEqualToString:@"invite"]) {
+            latestMessage = message;
+            currentLatestDate = message.date;
+        } else {
+            if (![message.contactID isEqualToString:@"invite"]) {
+                NSComparisonResult result = [currentLatestDate compare:message.date];
+                if (result == NSOrderedAscending) {
+                    currentLatestDate = message.date;
+                    latestMessage = message;
+                }
+            }
+        }
+    }
+    
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"h:mm:ss a MMM dd YYYY";
+    
+    _lastMessageDateLabel.text = [dateFormatter stringFromDate:latestMessage.date];
+    _lastMessageLabel.text = latestMessage.text;
+    
+    [_nameLabelConstraint uninstall];
+    [_nameLabel makeConstraints:^(MASConstraintMaker *make) {
+        _nameLabelConstraint = make.top.equalTo(self.contentView.top).with.offset(10);
+    }];
 }
 
 - (void)setHideButtons:(BOOL)hideButtons {

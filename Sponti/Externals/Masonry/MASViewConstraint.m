@@ -8,20 +8,26 @@
 
 #import "MASViewConstraint.h"
 #import "MASCompositeConstraint.h"
+#import "MASLayoutConstraint.h"
+#import "View+MASAdditions.h"
 
 @interface MASViewConstraint ()
 
 @property (nonatomic, strong, readwrite) MASViewAttribute *secondViewAttribute;
-@property (nonatomic, strong) NSLayoutConstraint *layoutConstraint;
+@property (nonatomic, weak) MAS_VIEW *installedView;
+@property (nonatomic, weak) MASLayoutConstraint *layoutConstraint;
 @property (nonatomic, assign) NSLayoutRelation layoutRelation;
 @property (nonatomic, assign) MASLayoutPriority layoutPriority;
 @property (nonatomic, assign) CGFloat layoutMultiplier;
 @property (nonatomic, assign) CGFloat layoutConstant;
 @property (nonatomic, assign) BOOL hasLayoutRelation;
+@property (nonatomic, strong) id mas_key;
 
 @end
 
 @implementation MASViewConstraint
+
+@synthesize delegate = _delegate;
 
 - (id)initWithFirstViewAttribute:(MASViewAttribute *)firstViewAttribute {
     self = [super init];
@@ -58,26 +64,26 @@
     self.hasLayoutRelation = YES;
 }
 
-- (BOOL)hasBeenCommitted {
+- (BOOL)hasBeenInstalled {
     return self.layoutConstraint != nil;
 }
 
 - (void)setSecondViewAttribute:(id)secondViewAttribute {
     if ([secondViewAttribute isKindOfClass:NSNumber.class]) {
         self.layoutConstant = [secondViewAttribute doubleValue];
-    }  else if ([secondViewAttribute isKindOfClass:UIView.class]) {
+    }  else if ([secondViewAttribute isKindOfClass:MAS_VIEW.class]) {
         _secondViewAttribute = [[MASViewAttribute alloc] initWithView:secondViewAttribute layoutAttribute:self.firstViewAttribute.layoutAttribute];
     } else if ([secondViewAttribute isKindOfClass:MASViewAttribute.class]) {
         _secondViewAttribute = secondViewAttribute;
     } else {
-        NSAssert(YES, @"attempting to add unsupported attribute: %@", secondViewAttribute);
+        NSAssert(NO, @"attempting to add unsupported attribute: %@", secondViewAttribute);
     }
 }
 
 #pragma mark - NSLayoutConstraint constant proxies
 
-- (id<MASConstraint> (^)(UIEdgeInsets))insets {
-    return ^id(UIEdgeInsets insets){
+- (id<MASConstraint> (^)(MASEdgeInsets))insets {
+    return ^id(MASEdgeInsets insets){
         NSLayoutAttribute layoutAttribute = self.firstViewAttribute.layoutAttribute;
         switch (layoutAttribute) {
             case NSLayoutAttributeLeft:
@@ -142,12 +148,23 @@
 
 #pragma mark - NSLayoutConstraint multiplier proxies
 
-- (id<MASConstraint> (^)(CGFloat))percent {
-    return ^id(CGFloat percent) {
-        NSAssert(!self.hasBeenCommitted,
-                 @"Cannot modify constraint percent after it has been committed");
+- (id<MASConstraint> (^)(CGFloat))multipliedBy {
+    return ^id(CGFloat multiplier) {
+        NSAssert(!self.hasBeenInstalled,
+                 @"Cannot modify constraint multiplier after it has been installed");
         
-        self.layoutMultiplier = percent;
+        self.layoutMultiplier = multiplier;
+        return self;
+    };
+}
+
+
+- (id<MASConstraint> (^)(CGFloat))dividedBy {
+    return ^id(CGFloat divider) {
+        NSAssert(!self.hasBeenInstalled,
+                 @"Cannot modify constraint multiplier after it has been installed");
+
+        self.layoutMultiplier = 1.0/divider;
         return self;
     };
 }
@@ -156,8 +173,8 @@
 
 - (id<MASConstraint> (^)(MASLayoutPriority))priority {
     return ^id(MASLayoutPriority priority) {
-        NSAssert(!self.hasBeenCommitted,
-                 @"Cannot modify constraint priority after it has been committed");
+        NSAssert(!self.hasBeenInstalled,
+                 @"Cannot modify constraint priority after it has been installed");
         
         self.layoutPriority = priority;
         return self;
@@ -189,22 +206,23 @@
 
 - (id<MASConstraint> (^)(id))equalityWithRelation:(NSLayoutRelation)relation {
     return ^id(id attribute) {
-        NSAssert(!self.hasLayoutRelation, @"Redefinition of constraint relation");
         if ([attribute isKindOfClass:NSArray.class]) {
+            NSAssert(!self.hasLayoutRelation, @"Redefinition of constraint relation");
             NSMutableArray *children = NSMutableArray.new;
             for (id attr in attribute) {
                 MASViewConstraint *viewConstraint = [self copy];
                 viewConstraint.secondViewAttribute = attr;
-                [viewConstraint.delegate addConstraint:viewConstraint];
                 [children addObject:viewConstraint];
             }
-            MASCompositeConstraint *compositeConstraint = [[MASCompositeConstraint alloc] initWithView:self.firstViewAttribute.view children:children];
+            MASCompositeConstraint *compositeConstraint = [[MASCompositeConstraint alloc] initWithChildren:children];
             compositeConstraint.delegate = self.delegate;
+            [self.delegate constraint:self shouldBeReplacedWithConstraint:compositeConstraint];
             return compositeConstraint;
         } else {
+            BOOL layoutConstantUpdate = self.layoutRelation == relation && [attribute isKindOfClass:NSNumber.class];
+            NSAssert(!self.hasLayoutRelation || layoutConstantUpdate, @"Redefinition of constraint relation");
             self.layoutRelation = relation;
             self.secondViewAttribute = attribute;
-            [self.delegate addConstraint:self];
             return self;
         }
     };
@@ -228,56 +246,64 @@
     return self;
 }
 
+#pragma mark - debug helpers
+
+- (id<MASConstraint> (^)(id))key {
+    return ^id(id key) {
+        self.mas_key = key;
+        return self;
+    };
+}
+
 #pragma mark - MASConstraint
 
-- (void)commit {
-    NSAssert(!self.hasBeenCommitted, @"Cannot commit constraint more than once");
+- (void)install {
+    NSAssert(!self.hasBeenInstalled, @"Cannot install constraint more than once");
     
-    UIView *firstLayoutItem = self.firstViewAttribute.view;
+    MAS_VIEW *firstLayoutItem = self.firstViewAttribute.view;
     NSLayoutAttribute firstLayoutAttribute = self.firstViewAttribute.layoutAttribute;
-    UIView *secondLayoutItem = self.secondViewAttribute.view;
+    MAS_VIEW *secondLayoutItem = self.secondViewAttribute.view;
     NSLayoutAttribute secondLayoutAttribute = self.secondViewAttribute.layoutAttribute;
+
+    // alignment attributes must have a secondViewAttribute
+    // therefore we assume that is refering to superview
+    // eg make.left.equalTo(@10)
     if (!self.firstViewAttribute.isSizeAttribute && !self.secondViewAttribute) {
         secondLayoutItem = firstLayoutItem.superview;
         secondLayoutAttribute = firstLayoutAttribute;
     }
     
+    MASLayoutConstraint *layoutConstraint
+        = [MASLayoutConstraint constraintWithItem:firstLayoutItem
+                                        attribute:firstLayoutAttribute
+                                        relatedBy:self.layoutRelation
+                                           toItem:secondLayoutItem
+                                        attribute:secondLayoutAttribute
+                                       multiplier:self.layoutMultiplier
+                                         constant:self.layoutConstant];
     
-    self.layoutConstraint = [NSLayoutConstraint constraintWithItem:firstLayoutItem
-                                                         attribute:firstLayoutAttribute
-                                                         relatedBy:self.layoutRelation
-                                                            toItem:secondLayoutItem
-                                                         attribute:secondLayoutAttribute
-                                                        multiplier:self.layoutMultiplier
-                                                          constant:self.layoutConstant];
-    
-    self.layoutConstraint.priority = self.layoutPriority;
+    layoutConstraint.priority = self.layoutPriority;
+    layoutConstraint.mas_key = self.mas_key;
     
     if (secondLayoutItem) {
-        UIView *closestCommonSuperview = nil;
-        
-        UIView *secondViewSuperview = secondLayoutItem;
-        while (!closestCommonSuperview && secondViewSuperview) {
-            UIView *firstViewSuperview = firstLayoutItem;
-            while (!closestCommonSuperview && firstViewSuperview) {
-                if (secondViewSuperview == firstViewSuperview) {
-                    closestCommonSuperview = secondViewSuperview;
-                }
-                firstViewSuperview = firstViewSuperview.superview;
-            }
-            secondViewSuperview = secondViewSuperview.superview;
-        }
+        MAS_VIEW *closestCommonSuperview = [firstLayoutItem mas_closestCommonSuperview:secondLayoutItem];
         NSAssert(closestCommonSuperview,
                  @"couldn't find a common superview for %@ and %@",
-                 firstLayoutItem,
-                 secondLayoutItem);
-        [closestCommonSuperview addConstraint:self.layoutConstraint];
+                 firstLayoutItem, secondLayoutItem);
+        self.installedView = closestCommonSuperview;
+        [closestCommonSuperview addConstraint:layoutConstraint];
+        self.layoutConstraint = layoutConstraint;
     } else {
-        
-        [firstLayoutItem addConstraint:self.layoutConstraint];
+        self.installedView = firstLayoutItem;
+        [firstLayoutItem addConstraint:layoutConstraint];
+        self.layoutConstraint = layoutConstraint;
     }
-    
-    
+}
+
+- (void)uninstall {
+    [self.installedView removeConstraint:self.layoutConstraint];
+    self.layoutConstraint = nil;
+    self.installedView = nil;
 }
 
 @end
