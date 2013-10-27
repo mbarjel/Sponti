@@ -197,27 +197,27 @@
 }
 
 - (void)didTapOnMapInChatMenuViewController:(SPChatMenuViewController *)chatMenuViewController {
-    if (self.chatView.conversation.contacts.count > 1) {
-        _block = NO;
-        _favourite = NO;
-        _invite = NO;
-        _map = YES;
-        _call = NO;
-        
-        NSMutableArray* contacts = [[SPContact MR_findAll] mutableCopy];
-        for (SPContact* contact in [self.conversation.contacts allObjects]) {
-            [contacts removeObject:contact];
-        }
-        
-        SPContactsViewController* contactsViewController = [[SPContactsViewController alloc] initWithType:SPContactsTypeInvite];
-        contactsViewController.delegate = self;
-        [contactsViewController filterOutContacts:contacts];
-        [contactsViewController setHideButtons:YES];
-        [self.navigationController pushViewController:contactsViewController animated:YES];
-    } else {
+//    if (self.chatView.conversation.contacts.count > 1) {
+//        _block = NO;
+//        _favourite = NO;
+//        _invite = NO;
+//        _map = YES;
+//        _call = NO;
+//        
+//        NSMutableArray* contacts = [[SPContact MR_findAll] mutableCopy];
+//        for (SPContact* contact in [self.conversation.contacts allObjects]) {
+//            [contacts removeObject:contact];
+//        }
+//        
+//        SPContactsViewController* contactsViewController = [[SPContactsViewController alloc] initWithType:SPContactsTypeInvite];
+//        contactsViewController.delegate = self;
+//        [contactsViewController filterOutContacts:contacts];
+//        [contactsViewController setHideButtons:YES];
+//        [self.navigationController pushViewController:contactsViewController animated:YES];
+//    } else {
         SPMapViewController* mapViewController = [[SPMapViewController alloc] initWithContact:[self.conversation.contacts anyObject]];
         [self.navigationController pushViewController:mapViewController animated:YES];
-    }
+//    }
 }
 
 - (void)didTapOnCallInChatMenuViewController:(SPChatMenuViewController *)chatMenuViewController {

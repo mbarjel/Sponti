@@ -205,40 +205,37 @@
 }
 
 - (void)didPanView:(UIPanGestureRecognizer *)sender {
-    CGFloat openValue = -220;
-    CGFloat closedValue = 0;
-    
-    CGRect chatContainerViewFrame = self.chatContainerView.frame;
-    
-    if (sender.state == UIGestureRecognizerStateChanged) {
-        CGPoint translation = [sender translationInView:self];
-        
-        NSLog(@"%f",translation.x);
-        
-        CGFloat newValue = chatContainerViewFrame.origin.x + translation.x;
-        
-        if ((openValue < newValue) && (newValue < closedValue)) {
-            NSLog(@"in if with value %f",newValue);
-            chatContainerViewFrame.origin.x = newValue;
-        } else if (newValue < openValue) {
-            NSLog(@"in first else if with value %f",newValue);
-            chatContainerViewFrame.origin.x = openValue;
-        } else if (newValue > closedValue) {
-            NSLog(@"in second else if with value %f",newValue);
-            chatContainerViewFrame.origin.x = closedValue;
-        }
-        self.chatContainerView.frame = chatContainerViewFrame;
-    }
-    
-    if (sender.state == UIGestureRecognizerStateEnded) {
-        if (chatContainerViewFrame.origin.x < -110) {
-            [self.delegate chatView:self didOpenMenu:NO];
-        } else {
-            [self.delegate chatView:self didOpenMenu:YES];
-        }
-    }
-    
-    [sender setTranslation:CGPointZero inView:self];
+//    CGFloat openValue = -220;
+//    CGFloat closedValue = 0;
+//    
+//    CGRect chatContainerViewFrame = self.chatContainerView.frame;
+//    
+//    if (sender.state == UIGestureRecognizerStateChanged) {
+//        CGPoint translation = [sender translationInView:self];
+//        
+//        CGFloat newValue = chatContainerViewFrame.origin.x + translation.x;
+//        
+//        if ((openValue < newValue) && (newValue < closedValue)) {
+//            chatContainerViewFrame.origin.x = newValue;
+//        } else if (newValue < openValue) {
+//            chatContainerViewFrame.origin.x = openValue;
+//        } else if (newValue > closedValue) {
+//            chatContainerViewFrame.origin.x = closedValue;
+//        }
+//        self.chatContainerView.frame = chatContainerViewFrame;
+//    }
+//    
+//    if (sender.state == UIGestureRecognizerStateEnded) {
+//        if (chatContainerViewFrame.origin.x < -110) {
+//            NSLog(@"less than -110");
+//            [self.delegate chatView:self didOpenMenu:NO];
+//        } else {
+//            NSLog(@"greater than -110");
+//            [self.delegate chatView:self didOpenMenu:YES];
+//        }
+//    }
+//    
+//    [sender setTranslation:CGPointZero inView:self];
 }
 
 #pragma mark - NSNotification

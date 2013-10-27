@@ -85,7 +85,7 @@
             break;
     }
     
-    if (self.conversation.contacts.count > 1) {
+    if (!(self.conversation.contacts.count > 1)) {
         SPContact* contact = [self.conversation.contacts anyObject];
         self.items = @[[contact.blocked boolValue] ? @"Unblock" : @"Block",[contact.favourite boolValue] ? @"Unfavourite" : @"Favourite",@"Invite Contact",@"Map",@"Call"];
         [self.tableView reloadData];
